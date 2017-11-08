@@ -10,7 +10,7 @@ defmodule ResuelveAuth.Plugs.TokenAuth do
 
   def call(%Plug.Conn{} = conn, _default) do
 
-    token = get_req_header(conn, "authorization")
+    [token] = get_req_header(conn, "authorization")
     secret = Application.get_env(:resuelve_auth, :secret)
     handler = Application.get_env(:resuelve_auth, :handler)
 
@@ -19,7 +19,7 @@ defmodule ResuelveAuth.Plugs.TokenAuth do
         conn
         |> assign(:session, data)
       {:error, reason} ->
-        handler.errors(conn, reason)
+        send_resp(conn, 401, Poison.encode!(%{error: reason}))
     end
   end
 end

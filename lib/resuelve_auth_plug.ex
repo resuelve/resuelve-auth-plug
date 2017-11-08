@@ -10,7 +10,7 @@ defmodule ResuelveAuth.Plugs.TokenAuth do
 
   def call(%Plug.Conn{} = conn, _default) do
 
-    token = get_req_header(conn, "authorization")
+    [token] = get_req_header(conn, "authorization")
     secret = "secret" #Application.get_env(:resuelve_auth, :secret)
     handler = "rtd" #Application.get_env(:resuelve_auth, :handler)
 

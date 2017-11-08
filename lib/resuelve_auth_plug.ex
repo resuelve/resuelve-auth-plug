@@ -19,7 +19,7 @@ defmodule ResuelveAuth.Plugs.TokenAuth do
         conn
         |> assign(:session, data)
       {:error, reason} ->
-        send_resp(conn, 401, Poison.encode!(%{error: reason}))
+        handler.errors(conn, reason)
     end
   end
 end

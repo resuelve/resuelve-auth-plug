@@ -11,15 +11,16 @@ defmodule ResuelveAuth.Plugs.TokenAuth do
   def call(%Plug.Conn{} = conn, _default) do
 
     [token] = get_req_header(conn, "authorization")
-    secret = "secret" #Application.get_env(:resuelve_auth, :secret)
-    handler = "rtd" #Application.get_env(:resuelve_auth, :handler)
+    secret = Application.get_env(:resuelve_auth, :secret)
+    handler = Application.get_env(:resuelve_auth, :handler)
 
     case TokenHelper.verify_token(token, secret) do
       {:ok, data} ->
         conn
         |> assign(:session, data)
       {:error, reason} ->
-        handler.errors(conn, reason)
+        # handler.errors(conn, reason)
+        send_resp(conn, 401, "error")
     end
   end
 end

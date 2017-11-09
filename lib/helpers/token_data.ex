@@ -3,5 +3,5 @@ defmodule ResuelveAuth.Helpers.TokenData do
   Estructura para datos genericos del token
   """
 
-  defstruct [:role, :session, :timestamp, :meta]
+  defstruct [:service, :role, :session, :timestamp, :meta]
 end

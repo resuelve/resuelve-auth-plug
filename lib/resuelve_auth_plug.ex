@@ -17,7 +17,7 @@ defmodule ResuelveAuth.Plugs.TokenAuth do
         assign(conn, :session, data)
     else
       {:error, reason} -> handler.errors(conn, reason)
-      _ -> handler.errors(conn, "authorization token not found.")
+      _ -> handler.errors(conn, "Unauthorized")
     end
   end
 end

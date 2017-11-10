@@ -37,7 +37,7 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
       true ->
         parse_token_data(data)
       false ->
-        {:error, "Firma del token invalida"}
+        {:error, "Unauthorized"}
     end
   end
 

@@ -13,7 +13,7 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
   @spec create_token(struct, String.t) :: String.t
   def create_token(%TokenData{} = data, secret) when is_map(data) do
 
-    Logger.debug "Token data: #{inspect data}"
+    no_logs() || Logger.debug "Token data: #{inspect data}"
 
     case Poison.encode(data) do
       {:ok, json} ->
@@ -54,4 +54,6 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
   defp sign_data(data, secret) do
     Base.encode16(:crypto.hmac(:sha256, secret, data))
   end
+
+  defp no_logs, do: Application.get_env(:resuelve_auth, :no_logs)
 end

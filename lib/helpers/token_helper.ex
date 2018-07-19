@@ -30,14 +30,11 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
   """
   @spec verify_token(String.t, String.t) :: tuple
   def verify_token(token, secret) do
-    [data, sign] = String.split(token, ".")
-    valid_sign = sign_data(data, secret)
-
-    case String.equivalent?(sign, valid_sign) do
-      true ->
-        parse_token_data(data)
-      false ->
-        {:error, "Unauthorized"}
+    with [data, sign] <- String.split(token, "."),
+         true <- String.equivalent?(sign, sign_data(data, secret)) do
+      parse_token_data(data)
+    else
+      _ -> {:error, "Unauthorized"}
     end
   end
 

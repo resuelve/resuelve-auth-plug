@@ -28,4 +28,10 @@ defmodule ResuelveAuthTest do
         "session" => "session",
         "timestamp" => "timestamp"}}
   end
+
+  test "Verify invalid token" do
+    assert TokenHelper.verify_token("invalid_token", "secret") == {
+      :error,
+      "Unauthorized"}
+  end
 end

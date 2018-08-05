@@ -10,6 +10,14 @@ def deps do
 end
 ```
 
+Agregar Plug a un pipeline
+```
+pipeline :api_auth do
+  ...
+  plug ResuelveAuth.Plugs.TokenAuth, "my-api"
+end
+```
+
 ## Configuración
 **Sin token logs**:
 ```

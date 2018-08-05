@@ -2,6 +2,14 @@
 
 Plug para validar peticiones firmadas
 
+## Agregar al proyecto
+
+```
+def deps do
+  [{:resuelve_auth, github: "resuelve/resuelve-auth-plug", tag: "v1.2"}]
+end
+```
+
 ## Configuración
 **Sin token logs**:
 ```

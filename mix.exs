@@ -13,7 +13,7 @@ defmodule ResuelveAuth.Mixfile do
 
   def application do
     [
-      extra_applications: [:logger, :cowboy, :plug]
+      extra_applications: [:logger, :cowboy, :plug, :timex]
     ]
   end
 
@@ -21,6 +21,7 @@ defmodule ResuelveAuth.Mixfile do
     [
       {:cowboy, "~> 2.6"},
       {:plug, "~> 1.8"},
+      {:timex, "~> 3.5"},
       {:poison, "~> 3.1"}
     ]
   end

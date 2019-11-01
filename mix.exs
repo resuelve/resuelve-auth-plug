@@ -4,7 +4,7 @@ defmodule ResuelveAuth.Mixfile do
   def project do
     [
       app: :resuelve_auth,
-      version: "0.1.1",
+      version: "1.2.1",
       elixir: "~> 1.7.4",
       start_permanent: Mix.env() == :prod,
       deps: deps()

@@ -9,7 +9,7 @@ defmodule ResuelveAuth.Utils.Calendar do
     IO.puts("unis_t #{inspect(unix_time)}")
 
     unix_time
-    |> DateTime.from_unix()
+    |> Timex.from_unix(:nanosecond)
     |> get(:limit)
     |> Timex.before?(Timex.now())
   end

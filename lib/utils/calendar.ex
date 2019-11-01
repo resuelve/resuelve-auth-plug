@@ -17,7 +17,7 @@ defmodule ResuelveAuth.Utils.Calendar do
   def is_past?(_input), do: true
 
   def get({:ok, date}, :limit) do
-    Timex.shift(date, hours: 2)
+    Timex.shift(date, hours: 4)
   end
 
   def get({:error, error}, :limit) do

@@ -1,4 +1,7 @@
-defmodule ResuelveAuthTest do
+defmodule ResuelveAuth.Helpers.TokenHelperTest do
+  @moduledoc """
+  Se encarga de probar el módulo TokenHelper
+  """
   use ExUnit.Case
   alias ResuelveAuth.Helpers.TokenHelper
   alias ResuelveAuth.Helpers.TokenData

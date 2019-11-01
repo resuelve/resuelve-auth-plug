@@ -19,13 +19,19 @@ end
 ```
 
 ## Configuración
-**Sin token logs**:
-```
-config :resuelve_auth,
-  no_logs: true
+
+En tu proyeto puedes definir el nivel de logs que deseas manejar:
+
+```elixir
+# config/dev.exs
+config :logger, :console, format: "[$level] $message\n"
+ 
+# config/prod.exs
+config :logger, level: :info
 ```
 
 ## Crear token y validarlo
+
 ```
 iex> alias ResuelveAuth.Helpers.TokenData
 iex> alias ResuelveAuth.Helpers.TokenHelper
@@ -39,3 +45,11 @@ iex> token = TokenHelper.create_token(token_data, "super-secret")
 iex> {:ok, %{"meta" => meta}} = TokenHelper.verify_token(token, "super-secret")
 iex> {:error, "Unauthorized"} = TokenHelper.verify_token(token, "invalid-secret-or-invalid-token")
 ```
+
+## TODO
+
+ - [] Añadir proceso de integración continua
+ - [] Agregar el **CHANGELOG** del proyeto
+ - [] Documentar el proyecto
+ - [] Agregar herramientas para medir la covertura de código
+ - [] Automatizar la generación de documentación

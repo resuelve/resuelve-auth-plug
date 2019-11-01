@@ -15,23 +15,16 @@ defmodule ResuelveAuthTest do
       meta: "metadata"
     }
 
-    assert TokenHelper.create_token(token_data, "secret") == (@json <> @sign)
+    assert TokenHelper.create_token(token_data, "secret") == @json <> @sign
   end
 
-  test "Verify token" do
-    assert TokenHelper.verify_token(@json <> @sign, "secret") == {
-      :ok,
-      %{
-        "service"=> "my_service",
-        "meta" => "metadata",
-        "role" => "role",
-        "session" => "session",
-        "timestamp" => "timestamp"}}
+  test "Verify token when timestamp is string" do
+    result = TokenHelper.verify_token(@json <> @sign, "secret")
+    assert result == {:error, "Unauthorized"}
   end
 
-  test "Verify invalid token" do
-    assert TokenHelper.verify_token("invalid_token", "secret") == {
-      :error,
-      "Unauthorized"}
+  test "Verify invalid token (no dot into string)" do
+    assert TokenHelper.verify_token("invalid_token", "secret") ==
+             {:error, "Unauthorized"}
   end
 end

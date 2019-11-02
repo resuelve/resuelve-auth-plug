@@ -12,6 +12,23 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
   @doc """
   Genera un token usando un mapa. Retorna un token con el siguiente formato
   JSON_EN_BASE64_SEGURO_PARA_URLS.FIRMA_HMAC_SHA_256_EN_BASE_16
+
+  ## Examples
+
+     iex> alias ResuelveAuth.Helpers.TokenData
+     iex> timestamp = 1572656155135
+     iex> data = %TokenData{ \
+     meta: nil, \
+     role: "service", \
+     service: "vanex-api", \
+     session: nil, \
+     timestamp: timestamp \
+     }
+     iex> secret = "secret"
+     iex> alias ResuelveAuth.Helpers.TokenHelper
+     iex> TokenHelper.create_token(data, secret)
+     "eyJ0aW1lc3RhbXAiOjE1NzI2NTYxNTUxMzUsInNlc3Npb24iOm51bGwsInNlcnZpY2UiOiJ2YW5leC1hcGkiLCJyb2xlIjoic2VydmljZSIsIm1ldGEiOm51bGx9.AF1532A9709E59E59D6ACDC21E8623D3C9DB99FCFBDD57865D1F0BC2C91F1E51"
+
   """
   @spec create_token(struct, String.t()) :: String.t()
   def create_token(%TokenData{} = data, secret) when is_map(data) do
@@ -33,8 +50,6 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
   """
   @spec verify_token(String.t(), String.t()) :: tuple
   def verify_token(token, secret) do
-    IO.puts("Token: #{token} secret: #{secret}")
-
     case String.contains?(token, ".") do
       true -> verify_token(token, secret, :ok)
       false -> {:error, @error}
@@ -49,13 +64,7 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
     |> equivalent?()
     |> parse_token_data()
     |> expired?()
-    |> debug()
     |> response()
-  end
-
-  def debug(input) do
-    IO.puts("Debug: #{inspect(input)}")
-    input
   end
 
   def sign_data(secret, data, sign) do
@@ -67,14 +76,10 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
     Base.encode16(:crypto.hmac(:sha256, secret, data))
   end
 
-  def equivalent?(%{data: data, valid_sign: valid_sign, sign: sign} = params) do
-    IO.puts("Params #{inspect(params)}")
-
+  def equivalent?(%{data: data, valid_sign: valid_sign, sign: sign}) do
     if String.equivalent?(valid_sign, sign) do
-      IO.puts("Algo sale bien: #{inspect(data)}")
       {:ok, data}
     else
-      IO.puts("Algo sale mal")
       {:error, false}
     end
   end
@@ -83,7 +88,6 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
 
   def parse_token_data({:ok, data}) do
     {:ok, json} = Base.url_decode64(data)
-    IO.puts("Parse_token: #{inspect(json)}")
     Poison.decode(json)
   end
 
@@ -94,7 +98,6 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
       data
       |> Map.get("timestamp")
       |> Calendar.add(@limit_time, :hour)
-      |> debug()
       |> Calendar.is_past?()
 
     %{expired: expired, data: data}

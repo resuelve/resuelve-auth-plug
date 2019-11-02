@@ -29,10 +29,12 @@ defmodule ResuelveAuth.Utils.Calendar do
   """
   @spec is_past?(integer()) :: boolean()
   def is_past?(unix_time) when is_integer(unix_time) do
-    IO.puts("is_past? .... #{unix_time}")
+    unix_time
+    |> Timex.from_unix(@time_units)
+    |> is_past?()
+  end
 
-    datetime = Timex.from_unix(unix_time, @time_units)
-    IO.puts("is_past? -> #{datetime}")
+  def is_past?(%DateTime{} = datetime) do
     Timex.before?(datetime, Timex.now())
   end
 
@@ -57,17 +59,10 @@ defmodule ResuelveAuth.Utils.Calendar do
   end
 
   def add(unix_time, hours, :hour) when is_integer(unix_time) do
-    IO.puts("unix_time.add #{unix_time}")
-
     unix_time
     |> Timex.from_unix(@time_units)
     |> add(hours, :hour)
   end
 
   def add(_non_time, _hours, :hour), do: {:error, :invalid_time}
-
-  def debug(input) do
-    IO.puts("Out=> #{inspect(input)}")
-    input
-  end
 end

@@ -3,7 +3,6 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
   Modulo para la generacion y verificacion de tokens JWT
   """
 
-  require Logger
   alias ResuelveAuth.TokenData
   alias ResuelveAuth.Utils.Calendar
   alias ResuelveAuth.Utils.Secret

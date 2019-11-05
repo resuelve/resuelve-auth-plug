@@ -4,7 +4,7 @@ defmodule ResuelveAuth.Mixfile do
   def project do
     [
       app: :resuelve_auth,
-      version: "1.3.0",
+      version: "2.0",
       elixir: "~> 1.7.4",
       start_permanent: Mix.env() == :prod,
       test_coverage: [tool: ExCoveralls],
@@ -18,7 +18,6 @@ defmodule ResuelveAuth.Mixfile do
       # Docs
       name: "Resuelve AuthPlug",
       source_url: "https://github.com/iver/resuelve-auth-plug",
-      home_url: "http://iver.mx/doc/",
       docs: [
         main: "ResuelveAuth.AuthPlug",
         logo: "assets/logo.png",

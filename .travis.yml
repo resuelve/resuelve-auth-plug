@@ -18,6 +18,7 @@ branches:
 script:
 - make compile
 - make test
+- mix coveralls.travis
 
 notifications:
   email: false

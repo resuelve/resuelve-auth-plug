@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/iver/resuelve-auth-plug.svg?branch=master)](https://travis-ci.org/iver/resuelve-auth-plug)
-
+[![Coverage Status](https://coveralls.io/repos/github/iver/resuelve-auth-plug/badge.svg?branch=master)](https://coveralls.io/github/iver/resuelve-auth-plug?branch=master)
 
 # ResuelveAuth
 
@@ -51,8 +51,8 @@ iex> {:error, "Unauthorized"} = TokenHelper.verify_token(token, "invalid-secret-
 
 ## TODO
 
- - [x] Añadir proceso de integración continua
+ - [] Añadir proceso de integración continua
  - [] Agregar el **CHANGELOG** del proyeto
  - [] Documentar el proyecto
- - [x] Agregar herramientas para medir la covertura de código
+ - [] Agregar herramientas para medir la covertura de código
  - [] Automatizar la generación de documentación

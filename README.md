@@ -6,7 +6,7 @@ Plug para validar peticiones firmadas
 
 ```
 def deps do
-  [{:resuelve_auth, github: "resuelve/resuelve-auth-plug", tag: "v1.2"}]
+  [{:resuelve_auth, github: "resuelve/resuelve-auth-plug", tag: "v1.3"}]
 end
 ```
 
@@ -14,7 +14,7 @@ Agregar Plug a un pipeline
 ```
 pipeline :api_auth do
   ...
-  plug ResuelveAuth.Plugs.TokenAuth, "my-api"
+  plug ResuelveAuth.AuthPlug, "my-api"
 end
 ```
 
@@ -33,7 +33,7 @@ config :logger, level: :info
 ## Crear token y validarlo
 
 ```
-iex> alias ResuelveAuth.Helpers.TokenData
+iex> alias ResuelveAuth.TokenData
 iex> alias ResuelveAuth.Helpers.TokenHelper
 iex> token_data = %TokenData{
   service: "my-service",

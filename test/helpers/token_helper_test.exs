@@ -6,7 +6,7 @@ defmodule ResuelveAuth.Helpers.TokenHelperTest do
   doctest ResuelveAuth.Helpers.TokenHelper
 
   alias ResuelveAuth.Helpers.TokenHelper
-  alias ResuelveAuth.Helpers.TokenData
+  alias ResuelveAuth.TokenData
 
   @secret "secret"
   @json "eyJ0aW1lc3RhbXAiOiJ0aW1lc3RhbXAiLCJzZXNzaW9uIjoic2Vzc2lvbiIsInNlcnZpY2UiOiJteV9zZXJ2aWNlIiwicm9sZSI6InJvbGUiLCJtZXRhIjoibWV0YWRhdGEifQ==."

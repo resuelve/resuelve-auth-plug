@@ -14,6 +14,8 @@ defmodule ResuelveAuth.Utils.Calendar do
 
   ## Ejemplos
 
+  ```elixir
+
      iex> alias ResuelveAuth.Utils.Calendar
      iex> unix_time = 1572617244
      iex> Calendar.is_past?(unix_time)
@@ -27,6 +29,8 @@ defmodule ResuelveAuth.Utils.Calendar do
      iex> alias ResuelveAuth.Utils.Calendar
      iex> Calendar.is_past?("2100-02-29T12:30:30+00:00")
      true
+
+  ```
 
   """
   @spec is_past?(integer()) :: boolean()
@@ -47,6 +51,8 @@ defmodule ResuelveAuth.Utils.Calendar do
 
   ## Ejemplos
 
+  ```elixir
+
      iex> {:ok, datetime} = DateTime.from_unix(0)
      iex> ResuelveAuth.Utils.Calendar.add(datetime, 2, :hour)
      #DateTime<1970-01-01 02:00:00Z>
@@ -54,6 +60,8 @@ defmodule ResuelveAuth.Utils.Calendar do
      iex> timestamp = 4128685709000
      iex> ResuelveAuth.Utils.Calendar.add(timestamp, 2, :hour)
      #DateTime<2100-10-31 19:08:29.000Z>
+
+  ```
 
   """
   def add(%DateTime{} = datetime, hours, :hour) do

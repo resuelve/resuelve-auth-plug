@@ -17,6 +17,8 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
 
   ## Examples
 
+  ```elixir
+
      iex> alias ResuelveAuth.TokenData
      iex> timestamp = 1572656155135
      iex> data = %TokenData{ \
@@ -33,6 +35,8 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
      iex> String.length(token)
      185
 
+  ```
+
   """
   @spec create_token(struct, String.t()) :: String.t()
   def create_token(%TokenData{} = data, secret) when is_map(data) do
@@ -44,6 +48,8 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
   Verifica si el token es válido y devuelve una mapa con los datos del token.
 
   ## Examples
+
+  ```elixir
 
      iex> alias ResuelveAuth.TokenData
      iex> timestamp = DateTime.to_unix(DateTime.utc_now(), :millisecond)
@@ -62,6 +68,8 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
      true
      iex> result["service"] == data.service
      true
+
+  ```
 
   """
   @spec verify_token(String.t(), String.t()) :: tuple

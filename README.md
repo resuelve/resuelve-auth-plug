@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/iver/resuelve-auth-plug.svg?branch=master)](https://travis-ci.org/iver/resuelve-auth-plug)
+
+
 # ResuelveAuth
 
 Plug para validar peticiones firmadas
@@ -48,8 +51,8 @@ iex> {:error, "Unauthorized"} = TokenHelper.verify_token(token, "invalid-secret-
 
 ## TODO
 
- - [] Añadir proceso de integración continua
+ - [x] Añadir proceso de integración continua
  - [] Agregar el **CHANGELOG** del proyeto
  - [] Documentar el proyecto
- - [] Agregar herramientas para medir la covertura de código
+ - [x] Agregar herramientas para medir la covertura de código
  - [] Automatizar la generación de documentación

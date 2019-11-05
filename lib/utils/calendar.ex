@@ -1,7 +1,9 @@
 defmodule ResuelveAuth.Utils.Calendar do
   @moduledoc """
-  Módulo que encapsula las funciones relacionadas a fecha,
-  tiempo y calendario
+  Módulo que encapsula las funciones relacionadas con la fecha.
+  Si se requiere usar alguna biblioteca de tiempo, aquí debe agregarse
+  la funcionalidad deseada y en el proyecto solo se deben encontrar
+  llamadas al módulo de Calendar para facilitar el mantenimiento del código.
   """
 
   @time_units :millisecond
@@ -10,7 +12,7 @@ defmodule ResuelveAuth.Utils.Calendar do
   Identifica si la fecha enviada como Unix time es pasada.
   En caso de mandar un valor que no sea entero, regresa `true` por defecto.
 
-  ## Examples
+  ## Ejemplos
 
      iex> alias ResuelveAuth.Utils.Calendar
      iex> unix_time = 1572617244
@@ -43,7 +45,7 @@ defmodule ResuelveAuth.Utils.Calendar do
   @doc """
   Agrega el número de horas enviado a la fecha proporcionada.
 
-  ## Examples
+  ## Ejemplos
 
      iex> {:ok, datetime} = DateTime.from_unix(0)
      iex> ResuelveAuth.Utils.Calendar.add(datetime, 2, :hour)

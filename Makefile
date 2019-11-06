@@ -23,18 +23,18 @@ get:
 debug:
 	iex -S mix
 
-doc: compile
-	mix docs
-	tar -zcf docs.tar.gz doc/
+doc: compile;
+	mix docs;
+	tar -zcf docs.tar.gz doc/;
 
 test: MIX_ENV=test
-	mix test --trace
-	mix coveralls
+	mix test --trace;
+	mix coveralls;
 
 compile: clean get
-	mix compile
-	mix docs
-	tar -zcf docs.tar.gz doc/
+	mix compile;
+	mix docs;
+	tar -zcf docs.tar.gz doc/;
 
 release: MIX_ENV=prod
 release: compile

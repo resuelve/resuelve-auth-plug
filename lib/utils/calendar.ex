@@ -54,12 +54,16 @@ defmodule ResuelveAuth.Utils.Calendar do
   ```elixir
 
      iex> {:ok, datetime} = DateTime.from_unix(0)
-     iex> ResuelveAuth.Utils.Calendar.add(datetime, 2, :hour)
-     #DateTime<1970-01-01 02:00:00Z>
+     iex> limit_time = ResuelveAuth.Utils.Calendar.add(datetime, 2, :hour)
+     iex> {:ok, expected, 0} = DateTime.from_iso8601("1970-01-01 02:00:00Z")
+     iex> DateTime.compare(limit_time, expected)
+     :eq
 
      iex> timestamp = 4128685709000
-     iex> ResuelveAuth.Utils.Calendar.add(timestamp, 2, :hour)
-     #DateTime<2100-10-31 19:08:29.000Z>
+     iex> limit_time = ResuelveAuth.Utils.Calendar.add(timestamp, 2, :hour)
+     iex> {:ok, expected, 0} = DateTime.from_iso8601("2100-10-31 19:08:29.000Z")
+     iex> DateTime.compare(limit_time, expected)
+     :eq
 
   ```
 

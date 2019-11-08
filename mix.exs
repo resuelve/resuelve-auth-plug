@@ -4,8 +4,8 @@ defmodule ResuelveAuth.Mixfile do
   def project do
     [
       app: :resuelve_auth,
-      version: "0.1.1",
-      elixir: "~> 1.7.4",
+      version: "1.3.0",
+      elixir: "~> 1.9",
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
@@ -19,7 +19,7 @@ defmodule ResuelveAuth.Mixfile do
 
   defp deps do
     [
-      {:cowboy, "~> 2.6"},
+      {:cowboy, "~> 2.7"},
       {:plug, "~> 1.8"},
       {:poison, "~> 3.1"}
     ]

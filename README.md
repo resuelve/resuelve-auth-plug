@@ -6,7 +6,7 @@ Plug para validar peticiones firmadas
 
 ```
 def deps do
-  [{:resuelve_auth, github: "resuelve/resuelve-auth-plug", tag: "v1.2"}]
+  [{:resuelve_auth, github: "resuelve/resuelve-auth-plug", tag: "v1.3"}]
 end
 ```
 

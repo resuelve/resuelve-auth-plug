@@ -1,13 +1,13 @@
 defmodule ResuelveAuth.TokenData do
   @moduledoc """
-  Estructura para datos genericos del token
+  Estructura que define los elementos de un token
   """
 
   alias ResuelveAuth.Utils.Secret
 
   defstruct [:service, :role, :session, :timestamp, :meta]
 
-  @error "Unauthorized"
+  @errors [wrong_format: "wrong format", unauthorized: "unauthorized"]
 
   def cast(token, secret) do
     token
@@ -16,14 +16,14 @@ defmodule ResuelveAuth.TokenData do
     |> is_equivalent(secret)
   end
 
-  defp split(false, _reason), do: {:error, @error}
+  defp split(false, _reason), do: {:error, @errors[:wrong_format]}
 
   defp split(true, token) do
     [data, sign] = String.split(token, ".")
     {:ok, %{data: data, sign: sign}}
   end
 
-  defp is_equivalent({:error, _reason}, _secret), do: {:error, @error}
+  defp is_equivalent({:error, reason}, _secret), do: {:error, reason}
 
   defp is_equivalent({:ok, %{data: data, sign: sign}}, secret) do
     data
@@ -31,7 +31,7 @@ defmodule ResuelveAuth.TokenData do
     |> Secret.equivalent?(sign)
     |> case do
       true -> {:ok, data}
-      false -> {:error, @error}
+      false -> {:error, @errors[:unauthorized]}
     end
   end
 end

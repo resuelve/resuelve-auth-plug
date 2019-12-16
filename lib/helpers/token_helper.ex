@@ -8,8 +8,7 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
   alias ResuelveAuth.Utils.Calendar
   alias ResuelveAuth.Utils.Secret
 
-  @error "Unauthorized"
-  @limit_time 4
+  @errors [expired: "token has expired", unauthorized: "unauthorized"]
 
   @doc """
   Genera un token usando un mapa. Retorna un token con el siguiente formato
@@ -60,10 +59,10 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
      session: nil, \
      timestamp: timestamp \
      }
-     iex> secret = "secret"
+     iex> options = [secret: "secret", limit_time: 4]
      iex> alias ResuelveAuth.Helpers.TokenHelper
-     iex> token = TokenHelper.create_token(data, secret)
-     iex> {:ok, result} = TokenHelper.verify_token(token, secret)
+     iex> token = TokenHelper.create_token(data, options[:secret])
+     iex> {:ok, result} = TokenHelper.verify_token(token, options)
      iex> result["timestamp"] == data.timestamp
      true
      iex> result["service"] == data.service
@@ -72,29 +71,29 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
   ```
 
   """
-  @spec verify_token(String.t(), String.t()) :: tuple
-  def verify_token(token, secret) do
-    with {:ok, data} <- TokenData.cast(token, secret) do
+  @spec verify_token(String.t(), List.t()) :: tuple
+  def verify_token(token, options) do
+    with {:ok, data} <- TokenData.cast(token, options[:secret]) do
       data
       |> Secret.decode64()
       |> Secret.decode()
-      |> is_expired()
+      |> is_expired(options[:limit_time])
     end
   end
 
   # Evalua si ha expirado la sesión siempre y cuando el valor
   # de entrada sea una tupla con respuesta positiva {:ok, data}
-  @spec is_expired({:error, any()} | {:ok, binary()}) ::
+  @spec is_expired({:error, any()} | {:ok, binary()}, integer()) ::
           {:ok, binary()} | {:error, binary()}
-  defp is_expired({:error, _}), do: {:error, @error}
+  defp is_expired({:error, _}, _time), do: {:error, @errors[:unauthorized]}
 
-  defp is_expired({:ok, data}) do
+  defp is_expired({:ok, data}, limit_time) do
     data
     |> Map.get("timestamp")
-    |> Calendar.add(@limit_time, :hour)
+    |> Calendar.add(limit_time, :hour)
     |> Calendar.is_past?()
     |> case do
-      true -> {:error, @error}
+      true -> {:error, @errors[:expired]}
       false -> {:ok, data}
     end
   end

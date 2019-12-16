@@ -1,6 +1,6 @@
 defmodule ResuelveAuth.Utils.Calendar do
   @moduledoc """
-  Módulo que encapsula las funciones relacionadas con la fecha.
+  Encapsula las funciones relacionadas con la fecha.
   Si se requiere usar alguna biblioteca de tiempo, aquí debe agregarse
   la funcionalidad deseada y en el proyecto solo se deben encontrar
   llamadas al módulo de Calendar para facilitar el mantenimiento del código.

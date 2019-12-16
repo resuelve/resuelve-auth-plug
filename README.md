@@ -7,14 +7,15 @@ Plug para validar peticiones firmadas
 
 ## Agregar al proyecto
 
-```
+```elixir
 def deps do
   [{:resuelve_auth, github: "resuelve/resuelve-auth-plug", tag: "v2.0"}]
 end
 ```
 
 Agregar Plug a un pipeline
-```
+
+```elixir
 pipeline :api_auth do
   ...
   plug ResuelveAuth.AuthPlug, "my-api"
@@ -31,11 +32,19 @@ config :logger, :console, format: "[$level] $message\n"
  
 # config/prod.exs
 config :logger, level: :info
+
+```
+
+También puedes establecer el tiempo de expiración del token en la configuración del proyecto, por defecto será de una semana.
+
+```elixir
+# config/config.exs
+
 ```
 
 ## Crear token y validarlo
 
-```
+```elixir
 iex> alias ResuelveAuth.TokenData
 iex> alias ResuelveAuth.Helpers.TokenHelper
 iex> token_data = %TokenData{
@@ -47,6 +56,7 @@ iex> token_data = %TokenData{
 iex> token = TokenHelper.create_token(token_data, "super-secret")
 iex> {:ok, %{"meta" => meta}} = TokenHelper.verify_token(token, "super-secret")
 iex> {:error, "Unauthorized"} = TokenHelper.verify_token(token, "invalid-secret-or-invalid-token")
+
 ```
 
 ## TODO

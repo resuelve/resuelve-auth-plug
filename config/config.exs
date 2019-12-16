@@ -1,13 +1,12 @@
-# This file is responsible for configuring your application
-# and its dependencies with the aid of the Mix.Config module.
 use Mix.Config
 
 config :logger, level: :debug
-# This configuration is loaded before any dependency and is restricted
-# to this project. If another project depends on this project, this
-# file won't be loaded nor affect the parent project. For this reason,
-# if you want to provide default values for your application for
-# 3rd-party users, it should be done in your "mix.exs" file.
+
+# secret: llave a emplear para generar el token
+# handler: define el módulo que responderá en caso de error
+config :resuelve_auth,
+  secret: "default_plug_key",
+  handler: ResuelveAuth.Sample.AuthHandler
 
 # You can configure your application as:
 #
@@ -28,4 +27,4 @@ config :logger, level: :debug
 # Configuration from the imported file will override the ones defined
 # here (which is why it is important to import them last).
 #
-#     import_config "#{Mix.env}.exs"
+# import_config "#{Mix.env()}.exs"

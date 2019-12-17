@@ -2,12 +2,6 @@ use Mix.Config
 
 config :logger, level: :debug
 
-# secret: llave a emplear para generar el token
-# handler: define el módulo que responderá en caso de error
-config :resuelve_auth,
-  secret: "default_plug_key",
-  handler: ResuelveAuth.Sample.AuthHandler
-
 # You can configure your application as:
 #
 #     config :resuelve_auth, key: :value

@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/iver/resuelve-auth-plug.svg?branch=master)](https://travis-ci.org/iver/resuelve-auth-plug)
-[![Coverage Status](https://coveralls.io/repos/github/iver/resuelve-auth-plug/badge.svg?branch=master)](https://coveralls.io/github/iver/resuelve-auth-plug?branch=master)
+[![Build Status](https://travis-ci.org/resuelve/resuelve-auth-plug.svg?branch=master)](https://travis-ci.org/resuelve/resuelve-auth-plug)
+[![Coverage Status](https://coveralls.io/repos/github/resuelve/resuelve-auth-plug/badge.svg?branch=master)](https://coveralls.io/github/resuelve/resuelve-auth-plug?branch=master)
 
 # ResuelveAuth
 

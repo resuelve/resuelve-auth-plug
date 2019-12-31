@@ -21,7 +21,7 @@ defmodule ResuelveAuth.Utils.Calendar do
     end
   end
 
-  def from_unix(timestamp), do: {:error, :invalid_unix_time}
+  def from_unix(_no_integer), do: {:error, :invalid_unix_time}
 
   @doc """
   Identifica si la fecha enviada como Unix time es pasada.

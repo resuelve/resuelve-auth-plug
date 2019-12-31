@@ -91,8 +91,10 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
     {:error, :unauthorized}
   end
 
-  # Evalua si ha expirado la sesión siempre y cuando el valor
-  # de entrada sea una tupla con respuesta positiva {:ok, data}
+  @doc """
+  Evalua si ha expirado la sesión siempre y cuando el valor
+  de entrada sea una tupla con respuesta positiva {:ok, data}
+  """
   @spec is_expired({:error, any()} | {:ok, binary()}, integer()) ::
           {:ok, binary()} | {:error, binary()}
   def is_expired({:error, _reason} = error, _time), do: error

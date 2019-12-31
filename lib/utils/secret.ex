@@ -2,7 +2,6 @@ defmodule ResuelveAuth.Utils.Secret do
   @moduledoc """
   Contiene lógica de codificación, decodificación, cifrado y descifrado.
   """
-  @legend "Error al firmar el Token: "
   require Logger
 
   @doc """
@@ -21,26 +20,32 @@ defmodule ResuelveAuth.Utils.Secret do
   @spec encode(%{}) :: tuple()
   def encode(input), do: Poison.encode(input)
 
-  @spec decode(tuple() | %{}) :: {:ok, any()} | {:error, any()}
-  def decode({:ok, json}), do: decode(json)
-
-  def decode({:error, reason} = result) do
-    Logger.error("#{@legend} #{reason}")
-    result
-  end
-
-  def decode(input), do: Poison.decode(input)
-
   @spec encode64(tuple() | %{}) :: {:ok, any()} | {:error, any()}
   def encode64({:ok, json}), do: encode64(json)
-  def encode64({:error, reason}), do: Logger.error("#{@legend} #{reason}")
+
+  def encode64({:error, reason} = error) do
+    Logger.error(fn -> "#{reason}" end)
+    error
+  end
+
   def encode64(input), do: Base.url_encode64(input)
 
   @spec decode64(%{}) :: tuple()
   def decode64(input), do: Base.url_decode64(input)
 
-  def cypher({:error, reason} = params) do
-    Logger.error("#{@legend} #{reason}")
+  @spec decode(tuple() | %{}) :: {:ok, any()} | {:error, any()}
+  def decode({:ok, json}), do: decode(json)
+
+  def decode({:error, reason} = result) do
+    Logger.error(fn -> "#{reason}" end)
+    result
+  end
+
+  @spec decode(%{}) :: {:ok, any()} | {:error, any()}
+  def decode(input), do: Poison.decode(input)
+
+  def cypher({:error, reason} = _params) do
+    Logger.error(fn -> "#{reason}" end)
     {:error, :wrong_format}
   end
 
@@ -77,6 +82,7 @@ defmodule ResuelveAuth.Utils.Secret do
   """
   @spec equivalent?({:error, String.t()}) :: {:error, String.t()}
   def equivalent?({:error, _reason} = params), do: params
+
   @spec equivalent?(%{}, String.t()) :: boolean()
   def equivalent?(%{valid: valid}, sign), do: String.equivalent?(valid, sign)
 

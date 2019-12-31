@@ -9,6 +9,7 @@ Plug para validar peticiones firmadas
 
 * [Agregar al proyecto](#add-project)
 * [Configuración](#config)
+* [Generación del secret](#key-gen)
 * [Crear token y validarlo](#create-token)
 * [Manejo de errores](#error-handler)
 * [Errores](#errors)
@@ -48,6 +49,42 @@ config :logger, :console, format: "[$level] $message\n"
  
 # config/prod.exs
 config :logger, level: :info
+
+```
+
+## Creación del secret
+
+Si se tiene un proyecto con phoenix se puede generar una llave con el comando:
+
+```terminal
+$> mix phx.gen.secret 32
+TICxDq3wquPi49UuMfA4PjnWpz1PqnB1
+
+$> mix phx.gen.secret 64
+b9sq3yGrwWKXxpNfx3+a8hEaRa3S5QWMiRg+gPpbzc54ZpjVaqDYD3DRbPuYx621
+
+```
+
+Otra forma de generar un secret es:
+
+```terminal
+$> date +%s | sha256sum | base64 | head -c 32 ; echo
+MGYwM2M1Njk1MGIxYjcyOGY3OTc0ZDk0
+
+$> date +%s | sha256sum | base64 | head -c 64 ; echo
+ZGZhMzZhOWQyZTViOWQxNWIyY2NlMGExMDVhMzQ1ZGNkODA1YWUxNmRmMWRjMGZi
+
+```
+
+Con openssl:
+
+```elixir
+$> openssl rand -base64 32
+//ZE5siYI04Bp/2JtFq3uJOpS4XXChADe8b9RHenzFY=
+
+$> openssl rand -base64 64
+qlTw8sjiavcPAKIHJbO/zOUqLCS99zmyerjnoRc6FumLIc/Q9K9TjitS4JmTFh5r
+3ULjJAMfkouTR1OUV4LZ4Q==
 
 ```
 
@@ -99,6 +136,8 @@ iex> options = [secret: "super-secret-key", limit_time: 4, handler: Module.Handl
 iex> token = TokenHelper.verify_token(token, options)
 
 ```
+
+Basta con que exista una función llamada `errors/2` en el handler para que se pueda responder apropiadamente el error, los parámetros son la conección y un objeto que contenga el mensaje de error. 
 
 La verificación de token `verify_token` realmente no se llama directamente, esta se invoca internamente en el plug cuando se manda a llamar la función `ResuelveAuth.Plugs.TokenAuth.call/2`.
 

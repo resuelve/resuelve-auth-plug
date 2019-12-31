@@ -44,11 +44,11 @@ defmodule ResuelveAuth.Helpers.TokenHelperTest do
   test "Verify token when timestamp is wrong" do
     token = @json <> @sign
     result = TokenHelper.verify_token(token, @options)
-    assert result == {:error, "token has expired"}
+    assert result == {:error, :invalid_unix_time}
   end
 
   test "Verify invalid token (no dot into string)" do
     result = TokenHelper.verify_token("invalid_token", @options)
-    assert result == {:error, "wrong format"}
+    assert result == {:error, :wrong_format}
   end
 end

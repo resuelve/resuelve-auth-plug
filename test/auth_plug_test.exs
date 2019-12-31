@@ -37,7 +37,11 @@ defmodule ResuelveAuth.AuthPlugTest do
 
     %{assigns: %{session: response}} = conn
     token_map = Map.from_struct(token)
-    response_map = cast(response)
+
+    response_map =
+      response
+      |> cast()
+      |> Map.delete(:time)
 
     assert token_map == response_map
   end

@@ -8,8 +8,6 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
   alias ResuelveAuth.Utils.Calendar
   alias ResuelveAuth.Utils.Secret
 
-  @errors [expired: "token has expired", unauthorized: "unauthorized"]
-
   @doc """
   Genera un token usando un mapa. Retorna un token con el siguiente formato
   JSON_EN_BASE64_SEGURO_PARA_URLS.FIRMA_HMAC_SHA_256_EN_BASE_16
@@ -77,24 +75,57 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
       data
       |> Secret.decode64()
       |> Secret.decode()
+      |> extract()
       |> is_expired(options[:limit_time])
     end
+  end
+
+  def extract({:ok, %{"timestamp" => timestamp} = data}) do
+    with {:ok, time} <- Calendar.from_unix(timestamp) do
+      {:ok, Map.merge(data, %{"time" => time})}
+    end
+  end
+
+  def extract({:error, reason}) do
+    Logger.error("while deconding: #{inspect(reason)}")
+    {:error, :unauthorized}
   end
 
   # Evalua si ha expirado la sesión siempre y cuando el valor
   # de entrada sea una tupla con respuesta positiva {:ok, data}
   @spec is_expired({:error, any()} | {:ok, binary()}, integer()) ::
           {:ok, binary()} | {:error, binary()}
-  defp is_expired({:error, _}, _time), do: {:error, @errors[:unauthorized]}
+  def is_expired({:error, _reason} = error, _time), do: error
 
-  defp is_expired({:ok, data}, limit_time) do
-    data
-    |> Map.get("timestamp")
-    |> Calendar.add(limit_time, :hour)
-    |> Calendar.is_past?()
+  def is_expired({:ok, %{"time" => time} = data}, limit_time) do
+    DateTime.utc_now()
+    |> Calendar.diff(time)
+    |> is_expired(limit_time)
     |> case do
-      true -> {:error, @errors[:expired]}
+      true -> {:error, :expired}
       false -> {:ok, data}
     end
   end
+
+  @doc """
+  Identifica si el tiempo resultante (primer parámetro) es menor o igual al tiempo
+  límite (segundo parámetro).
+
+  ## Ejemplo:
+
+  ```elixir
+
+  iex> ResuelveAuth.Helpers.TokenHelper.is_expired(4, 5)
+  false
+
+  iex> ResuelveAuth.Helpers.TokenHelper.is_expired(4, 4)
+  false
+
+  iex> ResuelveAuth.Helpers.TokenHelper.is_expired(5, 4)
+  true
+
+  ```
+  """
+  @spec is_expired(integer(), integer()) :: boolean()
+  def is_expired(time, limit_time), do: time > limit_time
 end

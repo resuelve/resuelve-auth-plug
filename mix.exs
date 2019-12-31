@@ -17,7 +17,7 @@ defmodule ResuelveAuth.Mixfile do
       deps: deps(),
       # Docs
       name: "Resuelve AuthPlug",
-      source_url: "https://github.com/iver/resuelve-auth-plug",
+      source_url: "https://github.com/resuelve/resuelve-auth-plug",
       docs: [
         main: "ResuelveAuth.AuthPlug",
         logo: "assets/logo.png",
@@ -29,7 +29,7 @@ defmodule ResuelveAuth.Mixfile do
 
   def application do
     [
-      extra_applications: [:logger, :cowboy, :plug, :timex]
+      extra_applications: [:logger, :cowboy, :plug]
     ]
   end
 
@@ -37,7 +37,6 @@ defmodule ResuelveAuth.Mixfile do
     [
       {:cowboy, "~> 2.6"},
       {:plug, "~> 1.8"},
-      {:timex, "~> 3.5"},
       {:excoveralls, "~> 0.12", only: :test},
       {:ex_doc, "~> 0.20.1", runtime: false},
       {:ex_doc_makeup, "~> 0.1.0"},

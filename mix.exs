@@ -5,7 +5,7 @@ defmodule ResuelveAuth.Mixfile do
     [
       app: :resuelve_auth,
       version: "1.2.1",
-      elixir: "~> 1.5",
+      elixir: "~> 1.7",
       start_permanent: Mix.env() == :prod,
       description: description(),
       package: package(),
@@ -27,7 +27,7 @@ defmodule ResuelveAuth.Mixfile do
   def package do
     [
       files:
-        ~w(lib mix.exs README* readme* LICENSE* license* CHAGELOG* changelog*),
+        ~w(lib mix.exs README*),
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/resuelve/resuelve-auth-plug"}
     ]
@@ -37,7 +37,8 @@ defmodule ResuelveAuth.Mixfile do
     [
       {:cowboy, "~> 1.0"},
       {:plug, "~> 1.0"},
-      {:poison, "~> 3.1"}
+      {:poison, "~> 3.1"},
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
     ]
   end
 end

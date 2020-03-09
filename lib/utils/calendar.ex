@@ -1,12 +1,27 @@
 defmodule ResuelveAuth.Utils.Calendar do
   @moduledoc """
-  Módulo que encapsula las funciones relacionadas con la fecha.
+  Encapsula las funciones relacionadas con la fecha.
   Si se requiere usar alguna biblioteca de tiempo, aquí debe agregarse
   la funcionalidad deseada y en el proyecto solo se deben encontrar
   llamadas al módulo de Calendar para facilitar el mantenimiento del código.
   """
 
   @time_units :millisecond
+  require Logger
+
+  @spec from_unix(integer()) :: {:ok, %DateTime{}} | {:error, any()}
+  def from_unix(timestamp) when is_integer(timestamp) do
+    case DateTime.from_unix(timestamp, @time_units) do
+      {:ok, time} ->
+        {:ok, time}
+
+      {:error, reason} ->
+        Logger.error("datetime from unix fail: #{inspect(reason)}")
+        {:error, :invalid_unix_time}
+    end
+  end
+
+  def from_unix(_no_integer), do: {:error, :invalid_unix_time}
 
   @doc """
   Identifica si la fecha enviada como Unix time es pasada.
@@ -36,43 +51,66 @@ defmodule ResuelveAuth.Utils.Calendar do
   @spec is_past?(integer()) :: boolean()
   def is_past?(unix_time) when is_integer(unix_time) do
     unix_time
-    |> Timex.from_unix(@time_units)
+    |> DateTime.from_unix(@time_units)
     |> is_past?()
   end
 
-  def is_past?(%DateTime{} = datetime) do
-    Timex.before?(datetime, Timex.now())
+  def is_past?({:ok, %DateTime{} = datetime}) do
+    datetime
+    |> DateTime.compare(DateTime.utc_now())
+    |> case do
+      :lt -> true
+      _ -> false
+    end
   end
 
   def is_past?(_input), do: true
 
   @doc """
-  Agrega el número de horas enviado a la fecha proporcionada.
+  Regresa la fecha actual en `unix time`.
 
-  ## Ejemplos
+  ## Ejemplo:
 
   ```elixir
 
-     iex> {:ok, datetime} = DateTime.from_unix(0)
-     iex> ResuelveAuth.Utils.Calendar.add(datetime, 2, :hour)
-     #DateTime<1970-01-01 02:00:00Z>
-
-     iex> timestamp = 4128685709000
-     iex> ResuelveAuth.Utils.Calendar.add(timestamp, 2, :hour)
-     #DateTime<2100-10-31 19:08:29.000Z>
+  > ResuelveAuth.Utils.Calendar.unix_now()
+  1577733231563
 
   ```
-
   """
-  def add(%DateTime{} = datetime, hours, :hour) do
-    Timex.shift(datetime, hours: hours)
+  @spec unix_now() :: integer()
+  def unix_now do
+    DateTime.utc_now()
+    |> DateTime.to_unix(@time_units)
   end
 
-  def add(unix_time, hours, :hour) when is_integer(unix_time) do
-    unix_time
-    |> Timex.from_unix(@time_units)
-    |> add(hours, :hour)
-  end
+  @doc """
+  Regresa la diferencia en horas de dos fechas enviadas como parámetros en formato
+  unix.
 
-  def add(_non_time, _hours, :hour), do: {:error, :invalid_time}
+  ## Ejemplo:
+
+  ```elixir
+
+  iex> {ayer, ahora} = {1577646287000, 1577733231563}
+  iex> {:ok, first} = DateTime.from_unix(ayer, :millisecond)
+  iex> {:ok, second} = DateTime.from_unix(ahora, :millisecond)
+  iex> ResuelveAuth.Utils.Calendar.diff(first, second)
+  - 24
+
+  iex> {ayer, ahora} = {1577646287000, 1577733231563}
+  iex> {:ok, first} = DateTime.from_unix(ayer, :millisecond)
+  iex> {:ok, second} = DateTime.from_unix(ahora, :millisecond)
+  iex> ResuelveAuth.Utils.Calendar.diff(second, first)
+  24
+
+  ```
+  """
+  @spec diff(integer(), integer()) :: integer()
+  def diff(first_time, second_time) do
+    seconds = DateTime.diff(first_time, second_time)
+    # to hours
+    hours = seconds / (60 * 60)
+    Kernel.trunc(hours)
+  end
 end

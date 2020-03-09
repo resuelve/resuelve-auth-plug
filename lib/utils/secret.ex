@@ -8,8 +8,10 @@ defmodule ResuelveAuth.Utils.Secret do
   Firma la información con una semilla (`secret`) pasando primero por un
   proceso de códificación.
   """
-  @spec sign(%{}, String.t()) :: String.t()
-  def sign(data, secret) do
+  @spec sign(%{}, list()) :: String.t()
+  def sign(data, options) when is_list(options) do
+    secret = options[:secret]
+
     data
     |> encode()
     |> encode64()

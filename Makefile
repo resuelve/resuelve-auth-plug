@@ -27,7 +27,9 @@ doc: compile
 	mix docs
 	tar -zcf docs.tar.gz doc/
 
+.PHONY: test
 test: MIX_ENV=test
+test:
 	mix test --trace
 	mix coveralls
 
@@ -36,6 +38,7 @@ compile: clean get
 	mix docs
 	tar -zcf docs.tar.gz doc/
 
+.PHONY: release
 release: MIX_ENV=prod
 release: compile
 	mix escript.build

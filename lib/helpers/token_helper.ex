@@ -25,9 +25,9 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
      session: nil, \
      timestamp: timestamp \
      }
-     iex> secret = "secret"
+     iex> options = [secret: "secret", limit_time: 4]
      iex> alias ResuelveAuth.Helpers.TokenHelper
-     iex> token = TokenHelper.create_token(data, secret)
+     iex> token = TokenHelper.create_token(data, options)
      "eyJ0aW1lc3RhbXAiOjE1NzI2NTYxNTUxMzUsInNlc3Npb24iOm51bGwsInNlcnZpY2UiOiJteS1hcGkiLCJyb2xlIjoic2VydmljZSIsIm1ldGEiOm51bGx9.1E1FA5A03B62DB5E0E5C5627D578E4ABBD1E83EFBFF72907428D0C95DC491394"
      iex> String.length(token)
      185
@@ -36,15 +36,14 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
 
   """
   @spec create_token(struct, String.t()) :: String.t()
-  def create_token(%TokenData{} = data, secret) when is_map(data) do
-    Logger.debug("Token data: #{inspect(data)}")
-    Secret.sign(data, secret)
+  def create_token(%TokenData{} = data, options) when is_list(options) do
+    Secret.sign(data, options)
   end
 
   @doc """
   Verifica si el token es válido y devuelve una mapa con los datos del token.
 
-  ## Examples
+  ## Ejemplos:
 
   ```elixir
 
@@ -59,7 +58,7 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
      }
      iex> options = [secret: "secret", limit_time: 4]
      iex> alias ResuelveAuth.Helpers.TokenHelper
-     iex> token = TokenHelper.create_token(data, options[:secret])
+     iex> token = TokenHelper.create_token(data, options)
      iex> {:ok, result} = TokenHelper.verify_token(token, options)
      iex> result["timestamp"] == data.timestamp
      true
@@ -80,6 +79,24 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
     end
   end
 
+  @doc """
+  Extrae la fecha de un mapa en el formato `{:ok, %{}}` esperando que
+  sea un formato de unix y convertirlo a fecha.
+
+  ## Ejemplos:
+
+  ```elixir
+
+  iex> timestamp = 1583797948623
+  iex> data = %{"timestamp" => timestamp, "otra_llave" => "algo"}
+  iex> parameter = {:ok, data}
+  iex> {:ok, data} = ResuelveAuth.Helpers.TokenHelper.extract(parameter)
+  iex> data["time"]
+  #DateTime<2020-03-09 23:52:28.623Z>
+
+  ```
+
+  """
   def extract({:ok, %{"timestamp" => timestamp} = data}) do
     with {:ok, time} <- Calendar.from_unix(timestamp) do
       {:ok, Map.merge(data, %{"time" => time})}
@@ -93,7 +110,9 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
 
   @doc """
   Evalua si ha expirado la sesión siempre y cuando el valor
-  de entrada sea una tupla con respuesta positiva {:ok, data}
+  de entrada sea una tupla con respuesta positiva `{:ok, data}`.
+  El parámetro de límite de tiempo (segundo parámetro) será un
+  entero que representa las horas vigentes del token.
   """
   @spec is_expired({:error, any()} | {:ok, binary()}, integer()) ::
           {:ok, binary()} | {:error, binary()}

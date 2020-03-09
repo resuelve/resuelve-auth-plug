@@ -37,7 +37,7 @@ defmodule ResuelveAuth.Mixfile do
 
   def application do
     [
-      extra_applications: [:logger, :cowboy, :plug, :timex]
+      extra_applications: [:logger, :cowboy, :plug]
     ]
   end
 

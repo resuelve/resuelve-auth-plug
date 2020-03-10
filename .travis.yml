@@ -15,6 +15,7 @@ branches:
   - master
   - develop
   - feature/*
+  - release/*
 
 script:
 - make compile

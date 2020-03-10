@@ -20,7 +20,7 @@ defmodule ResuelveAuth.Mixfile do
       ],
       deps: deps(),
       name: "Resuelve AuthPlug",
-      source_url: "https://github.com/iver/resuelve-auth-plug",
+      source_url: "https://github.com/resuelve/resuelve-auth-plug",
       docs: docs()
     ]
   end

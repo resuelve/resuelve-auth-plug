@@ -14,6 +14,7 @@ help:
 	@echo -e "\tmake release\t Compila el proyecto y genera el paquete a subir al servidor"
 	@echo -e "\tmake clean\t Elimina los archivos generados por la compilación"
 
+.PHONY: get
 get:
 	mix local.hex --force;
 	mix local.rebar --force;
@@ -24,19 +25,22 @@ debug:
 	iex -S mix
 
 doc: compile
-	mix docs
-	tar -zcf docs.tar.gz doc/
+	mix docs;
+	tar -zcf docs.tar.gz doc/;
 
+.NOTPARALLEL: test
 .PHONY: test
 test: MIX_ENV=test
 test:
-	mix test --trace
-	mix coveralls
+	mix test --trace;
+	mix coveralls;
 
+.NOTPARALLEL: compile
+.PHONY: compile
 compile: clean get
-	mix compile
-	mix docs
-	tar -zcf docs.tar.gz doc/
+	mix compile;
+	mix docs;
+	tar -zcf docs.tar.gz doc/;
 
 .PHONY: release
 release: MIX_ENV=prod

@@ -16,8 +16,8 @@ defmodule ResuelveAuth.Utils.Calendar do
 
   iex> alias ResuelveAuth.Utils.Calendar
   iex> {:ok, %DateTime{} = date} = Calendar.from_unix(1572617244)
-  iex> date
-  \#DateTime\<1970-01-19 04:50:17.244Z\>
+  iex> DateTime.to_unix(date)
+  1572617
 
   iex> alias ResuelveAuth.Utils.Calendar
   iex> Calendar.from_unix(1724.0)

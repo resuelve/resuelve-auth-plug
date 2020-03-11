@@ -91,8 +91,8 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
   iex> data = %{"timestamp" => timestamp, "otra_llave" => "algo"}
   iex> parameter = {:ok, data}
   iex> {:ok, data} = ResuelveAuth.Helpers.TokenHelper.extract(parameter)
-  iex> data["time"]
-  #DateTime<2020-03-09 23:52:28.623Z>
+  iex> Map.keys(data)
+  ["otra_llave", "time", "timestamp"]
 
   ```
 

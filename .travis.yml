@@ -1,8 +1,7 @@
 language: elixir
 elixir:
-  - 1.5.2
   - 1.7.4
-  - 1.8
+  - 1.8.2
   - 1.9.2
 
 cache:
@@ -20,7 +19,6 @@ branches:
 script:
 - make compile
 - make test
-- mix coveralls.travis
 - MIX_ENV=test mix coveralls.travis
 
 notifications:

@@ -4,10 +4,9 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
   """
 
   require Logger
-  alias ResuelveAuth.Helpers.TokenData
+  alias ResuelveAuth.TokenData
   alias ResuelveAuth.Utils.Calendar
-  @error "Unauthorized"
-  @limit_time 4
+  alias ResuelveAuth.Utils.Secret
 
   @doc """
   Genera un token usando un mapa. Retorna un token con el siguiente formato
@@ -15,100 +14,139 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
 
   ## Examples
 
-     iex> alias ResuelveAuth.Helpers.TokenData
+  ```elixir
+
+     iex> alias ResuelveAuth.TokenData
      iex> timestamp = 1572656155135
      iex> data = %TokenData{ \
      meta: nil, \
      role: "service", \
-     service: "vanex-api", \
+     service: "my-api", \
      session: nil, \
      timestamp: timestamp \
      }
-     iex> secret = "secret"
+     iex> options = [secret: "secret", limit_time: 4]
      iex> alias ResuelveAuth.Helpers.TokenHelper
-     iex> TokenHelper.create_token(data, secret)
-     "eyJ0aW1lc3RhbXAiOjE1NzI2NTYxNTUxMzUsInNlc3Npb24iOm51bGwsInNlcnZpY2UiOiJ2YW5leC1hcGkiLCJyb2xlIjoic2VydmljZSIsIm1ldGEiOm51bGx9.AF1532A9709E59E59D6ACDC21E8623D3C9DB99FCFBDD57865D1F0BC2C91F1E51"
+     iex> token = TokenHelper.create_token(data, options)
+     "eyJ0aW1lc3RhbXAiOjE1NzI2NTYxNTUxMzUsInNlc3Npb24iOm51bGwsInNlcnZpY2UiOiJteS1hcGkiLCJyb2xlIjoic2VydmljZSIsIm1ldGEiOm51bGx9.1E1FA5A03B62DB5E0E5C5627D578E4ABBD1E83EFBFF72907428D0C95DC491394"
+     iex> String.length(token)
+     185
+
+  ```
 
   """
   @spec create_token(struct, String.t()) :: String.t()
-  def create_token(%TokenData{} = data, secret) when is_map(data) do
-    Logger.debug("Token data: #{inspect(data)}")
+  def create_token(%TokenData{} = data, options) when is_list(options) do
+    Secret.sign(data, options)
+  end
 
-    case Poison.encode(data) do
-      {:ok, json} ->
-        json
-        |> Base.url_encode64()
-        |> build_token(secret)
+  @doc """
+  Verifica si el token es válido y devuelve una mapa con los datos del token.
 
-      {:error, reason} ->
-        Logger.error("No se puede crear Token: #{reason}")
+  ## Ejemplos:
+
+  ```elixir
+
+     iex> alias ResuelveAuth.TokenData
+     iex> timestamp = DateTime.to_unix(DateTime.utc_now(), :millisecond)
+     iex> data = %TokenData{ \
+     meta: nil, \
+     role: "service", \
+     service: "my-api", \
+     session: nil, \
+     timestamp: timestamp \
+     }
+     iex> options = [secret: "secret", limit_time: 4]
+     iex> alias ResuelveAuth.Helpers.TokenHelper
+     iex> token = TokenHelper.create_token(data, options)
+     iex> {:ok, result} = TokenHelper.verify_token(token, options)
+     iex> result["timestamp"] == data.timestamp
+     true
+     iex> result["service"] == data.service
+     true
+
+  ```
+
+  """
+  @spec verify_token(String.t(), List.t()) :: tuple
+  def verify_token(token, options) do
+    with {:ok, data} <- TokenData.cast(token, options[:secret]) do
+      data
+      |> Secret.decode64()
+      |> Secret.decode()
+      |> extract()
+      |> is_expired(options[:limit_time])
     end
   end
 
   @doc """
-  Verifica la firma y devuelve una mapa con los datos del token
+  Extrae la fecha de un mapa en el formato `{:ok, %{}}` esperando que
+  sea un formato de unix y convertirlo a fecha.
+
+  ## Ejemplos:
+
+  ```elixir
+
+  iex> timestamp = 1583797948623
+  iex> data = %{"timestamp" => timestamp, "otra_llave" => "algo"}
+  iex> parameter = {:ok, data}
+  iex> {:ok, data} = ResuelveAuth.Helpers.TokenHelper.extract(parameter)
+  iex> data["time"]
+  #DateTime<2020-03-09 23:52:28.623Z>
+
+  ```
+
   """
-  @spec verify_token(String.t(), String.t()) :: tuple
-  def verify_token(token, secret) do
-    case String.contains?(token, ".") do
-      true -> verify_token(token, secret, :ok)
-      false -> {:error, @error}
+  def extract({:ok, %{"timestamp" => timestamp} = data}) do
+    with {:ok, time} <- Calendar.from_unix(timestamp) do
+      {:ok, Map.merge(data, %{"time" => time})}
     end
   end
 
-  def verify_token(token, secret, :ok) do
-    [data, sign] = String.split(token, ".")
-
-    secret
-    |> sign_data(data, sign)
-    |> equivalent?()
-    |> parse_token_data()
-    |> expired?()
-    |> response()
+  def extract({:error, reason}) do
+    Logger.error("while deconding: #{inspect(reason)}")
+    {:error, :unauthorized}
   end
 
-  def sign_data(secret, data, sign) do
-    valid_sign = sign_data(secret, data)
-    %{data: data, valid_sign: valid_sign, sign: sign}
-  end
+  @doc """
+  Evalua si ha expirado la sesión siempre y cuando el valor
+  de entrada sea una tupla con respuesta positiva `{:ok, data}`.
+  El parámetro de límite de tiempo (segundo parámetro) será un
+  entero que representa las horas vigentes del token.
+  """
+  @spec is_expired({:error, any()} | {:ok, binary()}, integer()) ::
+          {:ok, binary()} | {:error, binary()}
+  def is_expired({:error, _reason} = error, _time), do: error
 
-  def sign_data(secret, data) do
-    Base.encode16(:crypto.hmac(:sha256, secret, data))
-  end
-
-  def equivalent?(%{data: data, valid_sign: valid_sign, sign: sign}) do
-    if String.equivalent?(valid_sign, sign) do
-      {:ok, data}
-    else
-      {:error, false}
+  def is_expired({:ok, %{"time" => time} = data}, limit_time) do
+    DateTime.utc_now()
+    |> Calendar.diff(time)
+    |> is_expired(limit_time)
+    |> case do
+      true -> {:error, :expired}
+      false -> {:ok, data}
     end
   end
 
-  def parse_token_data({:error, message}), do: {:error, message}
+  @doc """
+  Identifica si el tiempo resultante (primer parámetro) es menor o igual al tiempo
+  límite (segundo parámetro).
 
-  def parse_token_data({:ok, data}) do
-    {:ok, json} = Base.url_decode64(data)
-    Poison.decode(json)
-  end
+  ## Ejemplo:
 
-  def expired?({:error, _}), do: {:error, @error}
+  ```elixir
 
-  def expired?({:ok, data}) do
-    expired =
-      data
-      |> Map.get("timestamp")
-      |> Calendar.add(@limit_time, :hour)
-      |> Calendar.is_past?()
+  iex> ResuelveAuth.Helpers.TokenHelper.is_expired(4, 5)
+  false
 
-    %{expired: expired, data: data}
-  end
+  iex> ResuelveAuth.Helpers.TokenHelper.is_expired(4, 4)
+  false
 
-  def response(%{expired: true, data: _}), do: {:error, @error}
-  def response(%{expired: false, data: data}), do: {:ok, data}
-  def response({:error, message}), do: {:error, message}
+  iex> ResuelveAuth.Helpers.TokenHelper.is_expired(5, 4)
+  true
 
-  defp build_token(encoded_json, secret) do
-    sign = sign_data(secret, encoded_json)
-    "#{encoded_json}.#{sign}"
-  end
+  ```
+  """
+  @spec is_expired(integer(), integer()) :: boolean()
+  def is_expired(time, limit_time), do: time > limit_time
 end

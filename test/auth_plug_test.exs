@@ -6,8 +6,7 @@ defmodule ResuelveAuth.AuthPlugTest do
   alias ResuelveAuth.Helpers.TokenHelper
   alias ResuelveAuth.TokenData
 
-  @secret "secret"
-  @options [secret: @secret, limit_time: 4]
+  @options [secret: "secret", limit_time: 4]
 
   def build_token(service) do
     token = %TokenData{
@@ -17,7 +16,7 @@ defmodule ResuelveAuth.AuthPlugTest do
       timestamp: DateTime.to_unix(DateTime.utc_now(), :millisecond)
     }
 
-    jwt = TokenHelper.create_token(token, @secret)
+    jwt = TokenHelper.create_token(token, @options)
     %{token: token, jwt: jwt}
   end
 

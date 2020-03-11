@@ -2,13 +2,34 @@ defmodule ResuelveAuth.Utils.Calendar do
   @moduledoc """
   Encapsula las funciones relacionadas con la fecha.
   Si se requiere usar alguna biblioteca de tiempo, aquí debe agregarse
-  la funcionalidad deseada y en el proyecto solo se deben encontrar
-  llamadas al módulo de Calendar para facilitar el mantenimiento del código.
+  la funcionalidad deseada. En el proyecto solo se deben encontrar
+  llamadas al módulo de `Calendar` para facilitar el mantenimiento del código.
   """
 
   @time_units :millisecond
   require Logger
 
+  @doc """
+  Convierte un valor de `unix_time` a una estructura `DateTime`.
+
+  ```elixir
+
+  iex> alias ResuelveAuth.Utils.Calendar
+  iex> {:ok, %DateTime{} = date} = Calendar.from_unix(1572617244)
+  iex> DateTime.to_unix(date)
+  1572617
+
+  iex> alias ResuelveAuth.Utils.Calendar
+  iex> Calendar.from_unix(1724.0)
+  {:error, :invalid_unix_time}
+
+  iex> alias ResuelveAuth.Utils.Calendar
+  iex> Calendar.from_unix("algo")
+  {:error, :invalid_unix_time}
+
+  ```
+
+  """
   @spec from_unix(integer()) :: {:ok, %DateTime{}} | {:error, any()}
   def from_unix(timestamp) when is_integer(timestamp) do
     case DateTime.from_unix(timestamp, @time_units) do

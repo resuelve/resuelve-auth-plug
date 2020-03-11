@@ -8,8 +8,10 @@ defmodule ResuelveAuth.Utils.Secret do
   Firma la información con una semilla (`secret`) pasando primero por un
   proceso de códificación.
   """
-  @spec sign(%{}, String.t()) :: String.t()
-  def sign(data, secret) do
+  @spec sign(%{}, list()) :: String.t()
+  def sign(data, options) when is_list(options) do
+    secret = options[:secret]
+
     data
     |> encode()
     |> encode64()
@@ -63,25 +65,27 @@ defmodule ResuelveAuth.Utils.Secret do
 
   @doc """
   Identifica si la tupla de la cadena firmada es válida de acuerdo al token enviado.
+
   ## Ejemplo:
 
   ```elixir
 
   iex> alias ResuelveAuth.Utils.Secret
   iex> data = {:error, "mensaje de error"}
-  iex> Secret.equivalent?(data)
+  iex> Secret.equivalent?(data, "data")
   {:error, "mensaje de error"}
 
   iex> alias ResuelveAuth.Utils.Secret
-  iex> data = %{valid: "datos", "firma"}
-  iex> Secret.equivalent?(data)
-  false
+  iex> data = %{valid: "datos"}
+  iex> Secret.equivalent?(data, "datos")
+  true
 
   ```
 
   """
-  @spec equivalent?({:error, String.t()}) :: {:error, String.t()}
-  def equivalent?({:error, _reason} = params), do: params
+  @spec equivalent?({:error, String.t()}, String.t() | nil) ::
+          {:error, String.t()}
+  def equivalent?({:error, _reason} = params, _any), do: params
 
   @spec equivalent?(%{}, String.t()) :: boolean()
   def equivalent?(%{valid: valid}, sign), do: String.equivalent?(valid, sign)

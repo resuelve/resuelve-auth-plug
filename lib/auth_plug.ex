@@ -8,6 +8,31 @@ defmodule ResuelveAuth.AuthPlug do
   - secret:     llave para generar el token vacia
   - handler:    Módulo de ejemplo para responder errores
 
+  ## Ejemplo:
+
+  ```exlir
+
+  # En el archivo router.ex
+  defmodule MyApi.Router do
+
+    # Se usan 10 horas como vigencia del token y
+    # se toma el comportamiento por defecto del handler.
+    @options [secret: "mi-llave-secreta", limit_time: 10]
+    use MyApi, :router
+
+    pipeline :auth do
+      plug ResuelveAuth.AuthPlug, @options
+    end
+
+    scope "/v1", MyApi do
+      pipe_through([:auth])
+      ..
+      post("/users/", UserController, :create)
+    end
+  end
+
+  ```
+
   """
 
   import Plug.Conn

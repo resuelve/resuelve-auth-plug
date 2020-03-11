@@ -20,18 +20,19 @@ Plug para validar peticiones firmadas
 
 ```elixir
 def deps do
-  [{:resuelve_auth, github: "resuelve/resuelve-auth-plug", tag: "v2.0"}]
+  [{:resuelve_auth, "~> v1.3"}]
 end
 ```
 
-Agregar Plug a un pipeline
+Agregar el Plug a un pipeline, siguiendo las [guías para crear bibliotecas en Elixir](https://hexdocs.pm/elixir/master/library-guidelines.html), se configuran las opciones y se puede enviar al plug.
 
 ```elixir
 pipeline :api_auth do
   ...
-  options = [secret: secret, 
+  options = [
+       secret: "secret", 
   		limit_time: 4,
-  		handler: ResuelveAuth.Sample.AuthHandler
+  		handler: MyApp.AuthHandler
   		]
   plug ResuelveAuth.AuthPlug, options
 end
@@ -149,5 +150,5 @@ Para saber más se puede consultar el módulo [ResuelveAuth.Sample.AuthHandler](
  - [x] Añadir proceso de integración continua
  - [x] Agregar herramientas para medir la covertura de código
  - [x] Automatizar la generación de documentación
- - [ ] Agregar el **CHANGELOG** del proyeto
- - [-] Documentar el proyecto
+ - [x] Agregar el **CHANGELOG** del proyeto
+ - [x] Documentar el proyecto

@@ -8,8 +8,7 @@ defmodule ResuelveAuth.Helpers.TokenHelperTest do
   alias ResuelveAuth.Helpers.TokenHelper
   alias ResuelveAuth.TokenData
 
-  @secret "secret"
-  @options [secret: @secret, limit_time: 4]
+  @secret [secret: "secret", limit_time: 4]
   @json "eyJ0aW1lc3RhbXAiOiJ0aW1lc3RhbXAiLCJzZXNzaW9uIjoic2Vzc2lvbiIsInNlcnZpY2UiOiJteV9zZXJ2aWNlIiwicm9sZSI6InJvbGUiLCJtZXRhIjoibWV0YWRhdGEifQ==."
   @sign "B5DCF6F8352BEC7D59C521E29A10122EA79456C76394F104F05B6B8203DB4F4E"
 
@@ -37,18 +36,17 @@ defmodule ResuelveAuth.Helpers.TokenHelperTest do
     }
 
     token = TokenHelper.create_token(token_data, @secret)
-    assert {:ok, data} = TokenHelper.verify_token(token, @options)
+    assert {:ok, data} = TokenHelper.verify_token(token, @secret)
     assert data = token_data
   end
 
-  test "Verify token when timestamp is wrong" do
-    token = @json <> @sign
-    result = TokenHelper.verify_token(token, @options)
-    assert result == {:error, :invalid_unix_time}
+  test "Verify token when timestamp is string" do
+    result = TokenHelper.verify_token(@json <> @sign, @secret)
+    assert {:error, :invalid_unix_time} == result
   end
 
   test "Verify invalid token (no dot into string)" do
-    result = TokenHelper.verify_token("invalid_token", @options)
-    assert result == {:error, :wrong_format}
+    result = TokenHelper.verify_token("invalid_token", @secret)
+    assert {:error, :wrong_format} == result
   end
 end

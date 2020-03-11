@@ -1,11 +1,13 @@
 defmodule ResuelveAuth.Mixfile do
   use Mix.Project
 
+  @version "1.3.0"
+
   def project do
     [
       app: :resuelve_auth,
-      version: "2.0.0",
-      elixir: ">= 1.5.2",
+      version: @version,
+      elixir: ">= 1.7.4",
       start_permanent: Mix.env() == :prod,
       description: description(),
       package: package(),
@@ -17,15 +19,19 @@ defmodule ResuelveAuth.Mixfile do
         "coveralls.html": :test
       ],
       deps: deps(),
-      # Docs
       name: "Resuelve AuthPlug",
       source_url: "https://github.com/resuelve/resuelve-auth-plug",
-      docs: [
-        main: "ResuelveAuth.AuthPlug",
-        logo: "assets/logo.png",
-        markdown_processor: ExDocMakeup,
-        extras: ["README.md"]
-      ]
+      docs: docs()
+    ]
+  end
+
+  def docs do
+    [
+      source_ref: "v#{@version}",
+      main: "ResuelveAuth.AuthPlug",
+      logo: "assets/logo.png",
+      markdown_processor: ExDocMakeup,
+      extras: ["README.md"]
     ]
   end
 
@@ -41,8 +47,7 @@ defmodule ResuelveAuth.Mixfile do
 
   def package do
     [
-      files:
-        ~w(lib mix.exs README* readme* LICENSE* license* CHAGELOG* changelog*),
+      files: ~w(lib mix.exs README*),
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/resuelve/resuelve-auth-plug"}
     ]

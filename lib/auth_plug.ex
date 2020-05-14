@@ -5,7 +5,7 @@ defmodule ResuelveAuth.AuthPlug do
   Valores por defecto:
 
   - limit_time: 1 semana en horas
-  - secret:     llave para generar el token vacia
+  - secret:     llave para generar el token vacio, también puede ser una función con aridad 0
   - handler:    Módulo de ejemplo para responder errores
 
   ## Ejemplo:
@@ -18,6 +18,31 @@ defmodule ResuelveAuth.AuthPlug do
     # Se usan 10 horas como vigencia del token y
     # se toma el comportamiento por defecto del handler.
     @options [secret: "mi-llave-secreta", limit_time: 10]
+    use MyApi, :router
+
+    pipeline :auth do
+      plug ResuelveAuth.AuthPlug, @options
+    end
+
+    scope "/v1", MyApi do
+      pipe_through([:auth])
+      ..
+      post("/users/", UserController, :create)
+    end
+  end
+
+  ```
+
+  ## Ejemplo con una función como secret
+
+  ```exlir
+
+  # En el archivo router.ex
+  defmodule MyApi.Router do
+
+    # Se usan 10 horas como vigencia del token y
+    # se toma el comportamiento por defecto del handler.
+    @options [secret: &MyAuth.get_secret/0, limit_time: 10]
     use MyApi, :router
 
     pipeline :auth do
@@ -48,6 +73,17 @@ defmodule ResuelveAuth.AuthPlug do
 
   @impl Plug
   def init(options) do
+    {secret, options} = Keyword.pop(options, :secret)
+
+    secret =
+      if is_function(secret) do
+        apply(secret, [])
+      else
+        secret
+      end
+
+    options = Keyword.put(options, :secret, secret)
+
     Keyword.merge(@default, options)
   end
 

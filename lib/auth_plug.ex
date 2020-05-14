@@ -73,18 +73,11 @@ defmodule ResuelveAuth.AuthPlug do
 
   @impl Plug
   def init(options) do
-    {secret, options} = Keyword.pop(options, :secret)
+    secret = infer_secret(options[:secret])
 
-    secret =
-      if is_function(secret) do
-        apply(secret, [])
-      else
-        secret
-      end
-
-    options = Keyword.put(options, :secret, secret)
-
-    Keyword.merge(@default, options)
+    @default
+    |> Keyword.merge(options)
+    |> Keyword.merge(secret: secret)
   end
 
   @impl Plug
@@ -100,4 +93,8 @@ defmodule ResuelveAuth.AuthPlug do
         options[:handler].errors(conn, "Unauthorized")
     end
   end
+
+  @spec infer_secret(String.t() | function) :: String.t()
+  defp infer_secret(value) when is_binary(value), do: value
+  defp infer_secret(value) when is_function(value), do: apply(value, [])
 end

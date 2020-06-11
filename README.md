@@ -30,29 +30,7 @@ Agregar el Plug a un pipeline, siguiendo las [guías para crear bibliotecas en E
 pipeline :api_auth do
   ...
   options = [
-       secret: "secret",
-  		limit_time: 4,
-  		handler: MyApp.AuthHandler
-  		]
-  plug ResuelveAuth.AuthPlug, options
-end
-```
-
-También se puede definir una función que se encargará de obtener el secret en tiempo de ejecución, esto para evitar que se asigne un valor `nil` al plug durante la compilación.
-
-Teniendo un módulo que se encargue de obtner el `secret` de algún lugar.
-
-```elixir
-defmodule Vault do
-  def get_secret, do: "super secret"
-end
-```
-
-```elixir
-pipeline :api_auth do
-  ...
-  options = [
-       secret: &Vault.get_secret/0,
+       secret: "secret", 
   		limit_time: 4,
   		handler: MyApp.AuthHandler
   		]

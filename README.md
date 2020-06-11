@@ -103,7 +103,7 @@ iex> token_data = %TokenData{
       timestamp: DateTime.to_unix(DateTime.utc_now(), :millisecond)
     }
 iex> options = [secret: "super-secret-key", limit_time: 4]
-iex> token = TokenHelper.create_token(token_data, options[:secret])
+iex> token = TokenHelper.create_token(token_data, options)
 iex> {:ok, %{"meta" => meta}} = TokenHelper.verify_token(token, options)
 
 ```

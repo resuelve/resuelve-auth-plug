@@ -20,7 +20,7 @@ Plug para validar peticiones firmadas
 
 ```elixir
 def deps do
-  [{:resuelve_auth, "~> v1.3"}]
+  [{:resuelve_auth, "~> 1.3"}]
 end
 ```
 

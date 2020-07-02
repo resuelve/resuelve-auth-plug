@@ -10,7 +10,7 @@ defmodule ResuelveAuth.AuthPlug do
 
   ## Ejemplo:
 
-  ```exlir
+  ```elixir
 
   # En el archivo router.ex
   defmodule MyApi.Router do

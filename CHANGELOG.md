@@ -1,30 +1,29 @@
 # Changelog
 
-
-El formato de este documento está en base a [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
-y el proyecto se adhiere al [Versionado Semántico](https://semver.org/lang/es/).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [v1.3] - (2020-03-12)
 
-#### :boom: Soporte de nuevas versiones
+#### :boom: Changed
 
-## Cambios
+* Plug modules are documented
+* Added error handling
+* Timex dependency is removed
+* Unit tests are added
+* Changes are made to follow the [library guidelines in Elixir] (https://hexdocs.pm/elixir/master/library-guidelines.html).
 
-* Se documentan los módulos del Plug
-* Se agrega manejo de errores
-* Se elimina dependencia Timex
-* Se añaden pruebas unitarias
-* Se realizan cambios para seguir las [reglas para crear bibliotecas en Elixir](https://hexdocs.pm/elixir/master/library-guidelines.html).
+### Using this version
 
-## Como usar esta versión
+Add to the project
 
 ```elixir
 def deps do
-  [{:resuelve_auth, "~> v1.3"}]
+  [{:resuelve_auth, "~> 1.3"}]
 end
 ```
 
-Agregar el Plug a un pipeline.
+Adding the plug
 
 ```elixir
 pipeline :api_auth do
@@ -41,17 +40,15 @@ end
 
 ## [v1.2.1] - (2020-03-09)
 
-#### :boom: Refactor del plug
+#### :boom: Refactor
 
-## Cambios
+* Add token validation time.
+* Add continuous integration with travis.
+* Registered in hexdocs.pm
 
-* Se agrega validación del `token` por tiempo.
-* Se incorpora `travis-ci` para la integración continua
-* Se registra en hexdocs.pm
+### Using this version
 
-## Cambios a realizar para actualizar a esta versión
-
-Para usar en el proyecto:
+Add to the project
 
 ```elixir
 def deps do
@@ -59,7 +56,7 @@ def deps do
 end
 ```
 
-Agregar Plug a un pipeline
+Adding the plug
 
 ```elixir
 pipeline :api_auth do

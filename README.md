@@ -3,59 +3,41 @@
 
 # ResuelveAuth
 
-Plug para validar peticiones firmadas
+Plug to validate signed request.
 
-## CONTENIDO
+## CONTENT
 
-* [Agregar al proyecto](#add-project)
-* [Configuración](#config)
-* [Generación del secret](#key-gen)
+* [Usage](#usage)
+* [Secret generation](#secret-generation)
 * [Crear token y validarlo](#create-token)
-* [Manejo de errores](#error-handler)
-* [Errores](#errors)
+* [Errors](#errors)
+  - [Error handler](#error-handler)
 
-<a name="add-project"></a>
-
-## Agregar al proyecto
+## Usage
 
 ```elixir
 def deps do
-  [{:resuelve_auth, "~> 1.3"}]
+  [{:resuelve_auth, "~> 1.4"}]
 end
 ```
 
-Agregar el Plug a un pipeline, siguiendo las [guías para crear bibliotecas en Elixir](https://hexdocs.pm/elixir/master/library-guidelines.html), se configuran las opciones y se puede enviar al plug.
+Add the plugin to a pipeline, following the [guides to creating libraries in Elixir] (https://hexdocs.pm/elixir/master/library-guidelines.html), the options are configured and can be sent to the plugin.
 
 ```elixir
 pipeline :api_auth do
   ...
   options = [
-       secret: "secret", 
-  		limit_time: 4,
-  		handler: MyApp.AuthHandler
-  		]
+    secret: "secret", 
+  	 limit_time: 4,
+  	 handler: MyApp.AuthHandler
+  ]
   plug ResuelveAuth.AuthPlug, options
 end
 ```
 
-<a name="config"></a>
+## Secret generation
 
-## Configuración
-
-En tu proyeto puedes definir el nivel de logs que deseas manejar:
-
-```elixir
-# config/dev.exs
-config :logger, :console, format: "[$level] $message\n"
- 
-# config/prod.exs
-config :logger, level: :info
-
-```
-
-## Creación del secret
-
-Si se tiene un proyecto con phoenix se puede generar una llave con el comando:
+When you use Phoenix you can create a new secret with:
 
 ```terminal
 $> mix phx.gen.secret 32
@@ -66,7 +48,7 @@ b9sq3yGrwWKXxpNfx3+a8hEaRa3S5QWMiRg+gPpbzc54ZpjVaqDYD3DRbPuYx621
 
 ```
 
-Otra forma de generar un secret es:
+Another way to create a secret is:
 
 ```terminal
 $> date +%s | sha256sum | base64 | head -c 32 ; echo
@@ -77,7 +59,7 @@ ZGZhMzZhOWQyZTViOWQxNWIyY2NlMGExMDVhMzQ1ZGNkODA1YWUxNmRmMWRjMGZi
 
 ```
 
-Con openssl:
+And the last if you wish to use openssl
 
 ```elixir
 $> openssl rand -base64 32
@@ -89,66 +71,121 @@ qlTw8sjiavcPAKIHJbO/zOUqLCS99zmyerjnoRc6FumLIc/Q9K9TjitS4JmTFh5r
 
 ```
 
-<a name="create-token"></a>
+## Create new token
 
-## Crear token y validarlo
+When you need to use the token struct, `%TokenData{}` is the option. So, you can define your struct as:
+
+```elixir
+%TokenData{
+  service: service,
+  role: "service",
+  meta: "metadata",
+  timestamp: 1593731494361
+}
+```
+
+As you can see the timestamp field requires a Unix time number. Then timestamp could be created with:
+
+```elixir
+DateTime.to_unix(DateTime.utc_now(), :millisecond)
+```
+
+And your struct looks like:
+
+```elixir
+%TokenData{
+  service: "my-api",
+  role: "admin",
+  meta: "metadata",
+  timestamp: DateTime.to_unix(DateTime.utc_now(), :millisecond)
+}
+```
+
+When you create the token the function require a few options.
+
+| Option  | Description | Default value |
+| ------- | ----------- | ------------- |
+| limit_time | time in hours | 168 h (1 w) |
+| secret  | Secret key | empty  |
+| handler | Error handler function | ResuelveAuth.Sample.AuthHandler |
+
 
 ```elixir
 iex> alias ResuelveAuth.TokenData
 iex> alias ResuelveAuth.Helpers.TokenHelper
+iex> time = DateTime.to_unix(DateTime.utc_now(), :millisecond)
 iex> token_data = %TokenData{
-      service: service,
-      role: "service",
+      service: "my-api",
+      role: "admin",
       meta: "metadata",
-      timestamp: DateTime.to_unix(DateTime.utc_now(), :millisecond)
+      timestamp: time
     }
 iex> options = [secret: "super-secret-key", limit_time: 4]
 iex> token = TokenHelper.create_token(token_data, options)
-iex> {:ok, %{"meta" => meta}} = TokenHelper.verify_token(token, options)
+"eyJ0aW1lc3RhbXAiOjE1OTM3MzQ0MzQ4ODEsInNlc3Npb24iOm51bGwsInNlcnZpY2UiOiJteS1hcGkiLCJyb2xlIjoiYWRtaW4iLCJtZXRhIjoibWV0YWRhdGEifQ==.9AAEBDB040BFB22160B4628EC45D69C3546C0775398D7B03C113C5BDDEC3A74B"
 
 ```
 
-<a name="errors"></a>
-
-## Errores
-
-Los siguientes son los errores que regresa el plug:
-
-|   Error       | Descripción    |
-| ------------- | -------------- |
-| expired:      | El token ha expirado |
-| unauthorized: | No autorizado |
-| wrong_format: | Formato de token incorrecto |
-
-<a name="error-handler"></a>
-
-## Manejador de errores
-
-Si el formato de respuesta no es el que se desea, se puede configurar la respuesta asociando un módulo como manejador de errores. 
+After the token was created you can use it in your requests and validate with the follow method:
 
 ```elixir
-defmodule Module.Handler do
-	  def errors(conn, reason) do
-	  	# lógica para responde el error
-	  end
+iex> options = [secret: "super-secret-key", limit_time: 4]
+iex> {:ok, result} = TokenHelper.verify_token(token, options)
+{:ok,
+ %{
+   "meta" => "metadata",
+   "role" => "admin",
+   "service" => "my-api",
+   "session" => nil,
+   "time" => ~U[2020-07-03 00:00:34.881Z],
+   "timestamp" => 1593734434881
+ }}
+```
+
+If the token is invalid, you may see an error like this:
+
+```elixir
+** (MatchError) no match of right hand side value: {:error, :wrong_format}
+```
+
+## Errors
+
+The following are the errors returned by the plug:
+
+* {:error, :expired}
+* {:error, :unauthorized}
+* {:error, :wrong_format}
+
+### Error handler
+
+Maybe you want to handle each error message or improve some details in the response. Below is an example of how to customize error handling.
+
+```elixir
+defmodule App.MyErrorHandler do
+  def errors(conn, reason) do
+    # Error handler logic
+  end
 end
 
 iex> options = [secret: "super-secret-key", limit_time: 4, handler: Module.Handler]
 iex> token = TokenHelper.verify_token(token, options)
-
 ```
 
-Basta con que exista una función llamada `errors/2` en el handler para que se pueda responder apropiadamente el error, los parámetros son la conección y un objeto que contenga el mensaje de error. 
+`verify_token` function should not call, this function is used as a sample. Here is an example of the [ResuelveAuth.Sample.AuthHandler](lib/sample/auth_handler.ex) module.
 
-La verificación de token `verify_token` realmente no se llama directamente, esta se invoca internamente en el plug cuando se manda a llamar la función `ResuelveAuth.Plugs.TokenAuth.call/2`.
+```elixir
+  @spec errors(map, String.t()) :: any
+  def errors(conn, message) do
+    Logger.error(fn -> "Invalid token: #{inspect(message)}" end)
+    detail = reason(message)
+    response = Poison.encode!(%{data: nil, errors: %{detail: detail}})
 
-Para saber más se puede consultar el módulo [ResuelveAuth.Sample.AuthHandler](lib/sample/auth_handler.ex).
+    conn
+    |> put_resp_content_type("application/json")
+    |> send_resp(:unauthorized, response)
+    |> halt
+  end
+```
 
 
-## TODO
 
- - [x] Añadir proceso de integración continua
- - [x] Agregar herramientas para medir la covertura de código
- - [x] Automatizar la generación de documentación
- - [x] Agregar el **CHANGELOG** del proyeto
- - [x] Documentar el proyecto

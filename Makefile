@@ -6,13 +6,12 @@ export MIX_ENV
 export ACTUAL
 
 help:
-	@echo -e "Resuelve Auth Plug. \n\nComandos disponibles:"
-	@echo -e "\tmake debug\t Ejecuta el proyecto en modo debug"
-	@echo -e "\tmake doc\t Genera la documentación del proyecto"
-	@echo -e "\tmake compile\t Compila el proyecto"
-	@echo -e "\tmake test\t Ejecuta las pruebas del proyecto"
-	@echo -e "\tmake release\t Compila el proyecto y genera el paquete a subir al servidor"
-	@echo -e "\tmake clean\t Elimina los archivos generados por la compilación"
+	@echo -e "Resuelve Auth Plug. \n\nAvailable commands:"
+	@echo -e "\tmake debug\t Run the project in debug mode"
+	@echo -e "\tmake doc\t Generate the project documentation."
+	@echo -e "\tmake compile\t Compile the project"
+	@echo -e "\tmake test\t Run the project tests"
+	@echo -e "\tmake clean\t Deletes generated application files."
 
 .PHONY: get
 get:
@@ -41,11 +40,6 @@ compile: clean get
 	mix compile;
 	mix docs;
 	tar -zcf docs.tar.gz doc/;
-
-.PHONY: release
-release: MIX_ENV=prod
-release: compile
-	mix escript.build
 
 clean:
 	mix clean

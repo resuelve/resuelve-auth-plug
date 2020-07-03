@@ -1,6 +1,6 @@
 defmodule ResuelveAuth.TokenData do
   @moduledoc """
-  Estructura que define los elementos de un token
+  Structure that defines the elements of a token.
   """
 
   alias ResuelveAuth.Utils.Secret
@@ -8,15 +8,17 @@ defmodule ResuelveAuth.TokenData do
   defstruct [:service, :role, :session, :timestamp, :meta]
 
   @doc """
-  Convierte el token a datos válidos o regresa un error.
+  Convert token to valid data or return an error.
   """
   @spec cast(String.t(), String.t()) :: {:ok, %{}} | {:error, String.t()}
-  def cast(token, secret) do
+  def cast(token, secret) when is_binary(token) do
     token
     |> String.contains?(".")
     |> split(token)
     |> is_equivalent(secret)
   end
+
+  def cast(_any, _secret), do: {:error, :wrong_format}
 
   @spec split(false, String.t()) :: {:error, String.t()}
   defp split(false, _reason), do: {:error, :wrong_format}

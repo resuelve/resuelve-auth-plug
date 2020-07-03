@@ -1,6 +1,6 @@
 defmodule ResuelveAuth.Sample.AuthHandler do
   @moduledoc """
-  Ejemplo de una implementación de un handler para la autenticación.
+  Example of implementing an error handler.
   """
   import Plug.Conn
   require Logger
@@ -13,11 +13,11 @@ defmodule ResuelveAuth.Sample.AuthHandler do
   ]
 
   @doc """
-  Maneja los errores que puede responder el plug
+  Handles errors that the plug can respond to
   """
   @spec errors(map, String.t()) :: any
   def errors(conn, message) do
-    Logger.error(fn -> "Token no valido: #{inspect(message)}" end)
+    Logger.error(fn -> "Invalid token: #{inspect(message)}" end)
     detail = reason(message)
     response = Poison.encode!(%{data: nil, errors: %{detail: detail}})
 
@@ -27,10 +27,7 @@ defmodule ResuelveAuth.Sample.AuthHandler do
     |> halt
   end
 
-  def reason(reason) do
-    case @errors[reason] do
-      nil -> @errors[:unauthorized]
-      default -> default
-    end
-  end
+  def reason(reason) when reason in @errors, do: @errors[reason]
+
+  def reason(_any), do: @errors[:unauthorized]
 end

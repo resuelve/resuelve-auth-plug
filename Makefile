@@ -17,7 +17,8 @@ help:
 get:
 	mix local.hex --force;
 	mix local.rebar --force;
-	mix deps;
+	mix deps.get;
+	mix deps.compile;
 
 debug:
 	iex -S mix

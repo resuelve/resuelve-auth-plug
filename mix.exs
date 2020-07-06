@@ -18,7 +18,6 @@ defmodule ResuelveAuth.Mixfile do
         "coveralls.post": :test,
         "coveralls.html": :test
       ],
-      aliases: aliases(),
       deps: deps(),
       name: "Resuelve AuthPlug",
       source_url: "https://github.com/resuelve/resuelve-auth-plug",
@@ -63,9 +62,5 @@ defmodule ResuelveAuth.Mixfile do
       {:ex_doc_makeup, "~> 0.1.0"},
       {:poison, "~> 3.1"}
     ]
-  end
-
-  defp aliases do
-    [deps: ["deps.get --only #{Mix.env()}", "deps.compile"]]
   end
 end

@@ -1,6 +1,6 @@
 defmodule ResuelveAuth.Helpers.TokenHelper do
   @moduledoc """
-  Modulo para la generacion y verificacion de tokens JWT
+  Token generation and validation module.
   """
 
   require Logger
@@ -9,8 +9,8 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
   alias ResuelveAuth.Utils.Secret
 
   @doc """
-  Genera un token usando un mapa. Retorna un token con el siguiente formato
-  JSON_EN_BASE64_SEGURO_PARA_URLS.FIRMA_HMAC_SHA_256_EN_BASE_16
+  Returns token generated from a map in the following format
+  SECURE_BASE64_JSON.SIGNATURE_HMAC_SHA_256_BASE16
 
   ## Examples
 
@@ -41,9 +41,9 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
   end
 
   @doc """
-  Verifica si el token es válido y devuelve una mapa con los datos del token.
+  Get the data from a valid token.
 
-  ## Ejemplos:
+  ## Examples
 
   ```elixir
 
@@ -109,10 +109,7 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
   end
 
   @doc """
-  Evalua si ha expirado la sesión siempre y cuando el valor
-  de entrada sea una tupla con respuesta positiva `{:ok, data}`.
-  El parámetro de límite de tiempo (segundo parámetro) será un
-  entero que representa las horas vigentes del token.
+  Define if token is expired.
   """
   @spec is_expired({:error, any()} | {:ok, binary()}, integer()) ::
           {:ok, binary()} | {:error, binary()}
@@ -129,8 +126,7 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
   end
 
   @doc """
-  Identifica si el tiempo resultante (primer parámetro) es menor o igual al tiempo
-  límite (segundo parámetro).
+  Identify if the time is less than the time limit
 
   ## Ejemplo:
 

@@ -12,6 +12,7 @@ Plug to validate signed request.
 * [Crear token y validarlo](#create-token)
 * [Errors](#errors)
   - [Error handler](#error-handler)
+* [Contributors](#contributors)
 
 ## Usage
 
@@ -101,7 +102,7 @@ And your struct looks like:
 }
 ```
 
-When you create the token the function require a few options.
+When you create the token the function require some options.
 
 | Option  | Description | Default value |
 | ------- | ----------- | ------------- |
@@ -152,9 +153,9 @@ If the token is invalid, you may see an error like this:
 
 The following are the errors returned by the plug:
 
-* {:error, :expired}
-* {:error, :unauthorized}
-* {:error, :wrong_format}
+* `{:error, :expired}`
+* `{:error, :unauthorized}`
+* `{:error, :wrong_format}`
 
 ### Error handler
 
@@ -171,7 +172,7 @@ iex> options = [secret: "super-secret-key", limit_time: 4, handler: Module.Handl
 iex> token = TokenHelper.verify_token(token, options)
 ```
 
-`verify_token` function should not call, this function is used as a sample. Here is an example of the [ResuelveAuth.Sample.AuthHandler](lib/sample/auth_handler.ex) module.
+`verify_token` function should not call directly, this function is used as a sample. Here is an example of the [ResuelveAuth.Sample.AuthHandler](lib/sample/auth_handler.ex) module.
 
 ```elixir
   @spec errors(map, String.t()) :: any
@@ -187,5 +188,7 @@ iex> token = TokenHelper.verify_token(token, options)
   end
 ```
 
+## Contributors
 
+This is the list of [contributors](https://github.com/resuelve/resuelve-auth-plug/graphs/contributors) who have participated in this project.
 

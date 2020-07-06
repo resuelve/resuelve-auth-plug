@@ -22,7 +22,7 @@ def deps do
 end
 ```
 
-Add the plugin to a pipeline, following the [guides to creating libraries in Elixir] (https://hexdocs.pm/elixir/master/library-guidelines.html), the options are configured and can be sent to the plugin.
+Add the plugin to a pipeline, following the [guides to creating libraries in Elixir](https://hexdocs.pm/elixir/master/library-guidelines.html), the options are configured and can be sent to the plugin.
 
 ```elixir
 pipeline :api_auth do
@@ -72,7 +72,7 @@ qlTw8sjiavcPAKIHJbO/zOUqLCS99zmyerjnoRc6FumLIc/Q9K9TjitS4JmTFh5r
 
 ```
 
-## Create new token
+## Create new token data
 
 When you need to use the token struct, `%TokenData{}` is the option. So, you can define your struct as:
 

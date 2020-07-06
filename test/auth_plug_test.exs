@@ -54,6 +54,6 @@ defmodule ResuelveAuth.AuthPlugTest do
       |> put_req_header("authorization", "invalid")
       |> AuthPlug.call(options)
 
-    assert body == ~s({"errors":{"detail":"wrong format"},"data":null})
+    assert body == ~s({"errors":{"detail":"unauthorized"},"data":null})
   end
 end

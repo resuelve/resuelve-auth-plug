@@ -20,13 +20,13 @@ defmodule ResuelveAuth.Utils.Secret do
   end
 
   @spec encode(%{}) :: tuple()
-  def encode(input), do: Poison.encode(input)
+  def encode(input), do: Poison.encode(input, strict_keys: true)
 
   @spec encode64(tuple() | %{}) :: {:ok, any()} | {:error, any()}
   def encode64({:ok, json}), do: encode64(json)
 
   def encode64({:error, reason} = error) do
-    Logger.error(fn -> "#{reason}" end)
+    Logger.error(fn -> "#{inspect(reason)}" end)
     error
   end
 
@@ -39,7 +39,7 @@ defmodule ResuelveAuth.Utils.Secret do
   def decode({:ok, json}), do: decode(json)
 
   def decode({:error, reason} = result) do
-    Logger.error(fn -> "#{reason}" end)
+    Logger.error(fn -> "#{inspect(reason)}" end)
     result
   end
 
@@ -47,7 +47,7 @@ defmodule ResuelveAuth.Utils.Secret do
   def decode(input), do: Poison.decode(input)
 
   def cypher({:error, reason} = _params) do
-    Logger.error(fn -> "#{reason}" end)
+    Logger.error(fn -> "#{inspect(reason)}" end)
     {:error, :wrong_format}
   end
 

@@ -1,23 +1,22 @@
 defmodule ResuelveAuth.AuthPlug do
   @moduledoc """
-  Plug para autenticacion mediante verificacion de firma de tokens.
+  Plug for authentication using token signature verification.
 
-  Valores por defecto:
+  | Option  | Description | Default value |
+  | ------- | ----------- | ------------- |
+  | limit_time | time in hours | 168 h (1 w) |
+  | secret  | Secret key | empty  |
+  | handler | Error handler function | ResuelveAuth.Sample.AuthHandler |
 
-  - limit_time: 1 semana en horas
-  - secret:     llave para generar el token vacia
-  - handler:    Módulo de ejemplo para responder errores
+  ## Example
 
-  ## Ejemplo:
-
-  ```exlir
+  ```elixir
 
   # En el archivo router.ex
   defmodule MyApi.Router do
 
-    # Se usan 10 horas como vigencia del token y
-    # se toma el comportamiento por defecto del handler.
-    @options [secret: "mi-llave-secreta", limit_time: 10]
+    # Using 10 hours as limit and default error handler
+    @options [secret: "my-secret-key", limit_time: 10]
     use MyApi, :router
 
     pipeline :auth do

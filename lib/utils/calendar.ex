@@ -1,16 +1,17 @@
 defmodule ResuelveAuth.Utils.Calendar do
   @moduledoc """
-  Encapsula las funciones relacionadas con la fecha.
-  Si se requiere usar alguna biblioteca de tiempo, aquí debe agregarse
-  la funcionalidad deseada. En el proyecto solo se deben encontrar
-  llamadas al módulo de `Calendar` para facilitar el mantenimiento del código.
+  Encapsulates the functions related to the date.
+  If using a time library is required,
+  it should be added here the desired functionality.
+  In the project you should only find calls to
+  the `Calendar` module to facilitate code maintenance.
   """
 
   @time_units :millisecond
   require Logger
 
   @doc """
-  Convierte un valor de `unix_time` a una estructura `DateTime`.
+  Converts the given Unix time to DateTime.
 
   ```elixir
 
@@ -37,7 +38,7 @@ defmodule ResuelveAuth.Utils.Calendar do
         {:ok, time}
 
       {:error, reason} ->
-        Logger.error("datetime from unix fail: #{inspect(reason)}")
+        Logger.error(fn -> "Datetime from unix fail: #{inspect(reason)}" end)
         {:error, :invalid_unix_time}
     end
   end
@@ -45,10 +46,10 @@ defmodule ResuelveAuth.Utils.Calendar do
   def from_unix(_no_integer), do: {:error, :invalid_unix_time}
 
   @doc """
-  Identifica si la fecha enviada como Unix time es pasada.
-  En caso de mandar un valor que no sea entero, regresa `true` por defecto.
+  Identifies if the date sent as Unix time is passed.
+  In case of sending a value that is not an integer, it returns `true` by default.
 
-  ## Ejemplos
+  ## Examples
 
   ```elixir
 
@@ -88,9 +89,9 @@ defmodule ResuelveAuth.Utils.Calendar do
   def is_past?(_input), do: true
 
   @doc """
-  Regresa la fecha actual en `unix time`.
+  Returns the current date in `unix time`.
 
-  ## Ejemplo:
+  ## Example
 
   ```elixir
 
@@ -106,10 +107,9 @@ defmodule ResuelveAuth.Utils.Calendar do
   end
 
   @doc """
-  Regresa la diferencia en horas de dos fechas enviadas como parámetros en formato
-  unix.
+  Returns the difference between two dates in unix format.
 
-  ## Ejemplo:
+  ## Example
 
   ```elixir
 
@@ -117,7 +117,7 @@ defmodule ResuelveAuth.Utils.Calendar do
   iex> {:ok, first} = DateTime.from_unix(ayer, :millisecond)
   iex> {:ok, second} = DateTime.from_unix(ahora, :millisecond)
   iex> ResuelveAuth.Utils.Calendar.diff(first, second)
-  - 24
+  -24
 
   iex> {ayer, ahora} = {1577646287000, 1577733231563}
   iex> {:ok, first} = DateTime.from_unix(ayer, :millisecond)
@@ -130,7 +130,6 @@ defmodule ResuelveAuth.Utils.Calendar do
   @spec diff(integer(), integer()) :: integer()
   def diff(first_time, second_time) do
     seconds = DateTime.diff(first_time, second_time)
-    # to hours
     hours = seconds / (60 * 60)
     Kernel.trunc(hours)
   end

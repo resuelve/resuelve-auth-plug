@@ -1,7 +1,7 @@
 defmodule ResuelveAuth.Mixfile do
   use Mix.Project
 
-  @version "1.3.0"
+  @version "1.4.0"
 
   def project do
     [
@@ -42,7 +42,7 @@ defmodule ResuelveAuth.Mixfile do
   end
 
   def description do
-    "Plug de resuelve para validar peticiones firmadas"
+    "Plug to validate signed requests"
   end
 
   def package do

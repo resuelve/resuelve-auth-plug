@@ -1,12 +1,12 @@
 defmodule ResuelveAuth.Utils.Secret do
   @moduledoc """
-  Contiene lógica de codificación, decodificación, cifrado y descifrado.
+  Contains encoding, decoding, encryption, and decryption logic.
   """
   require Logger
 
   @doc """
-  Firma la información con una semilla (`secret`) pasando primero por un
-  proceso de códificación.
+  Sign the information with a seed (`secret`)
+  by first going through a coding process.
   """
   @spec sign(%{}, list()) :: String.t()
   def sign(data, options) when is_list(options) do
@@ -20,13 +20,13 @@ defmodule ResuelveAuth.Utils.Secret do
   end
 
   @spec encode(%{}) :: tuple()
-  def encode(input), do: Poison.encode(input)
+  def encode(input), do: Poison.encode(input, strict_keys: true)
 
   @spec encode64(tuple() | %{}) :: {:ok, any()} | {:error, any()}
   def encode64({:ok, json}), do: encode64(json)
 
   def encode64({:error, reason} = error) do
-    Logger.error(fn -> "#{reason}" end)
+    Logger.error(fn -> "#{inspect(reason)}" end)
     error
   end
 
@@ -39,7 +39,7 @@ defmodule ResuelveAuth.Utils.Secret do
   def decode({:ok, json}), do: decode(json)
 
   def decode({:error, reason} = result) do
-    Logger.error(fn -> "#{reason}" end)
+    Logger.error(fn -> "#{inspect(reason)}" end)
     result
   end
 
@@ -47,7 +47,7 @@ defmodule ResuelveAuth.Utils.Secret do
   def decode(input), do: Poison.decode(input)
 
   def cypher({:error, reason} = _params) do
-    Logger.error(fn -> "#{reason}" end)
+    Logger.error(fn -> "#{inspect(reason)}" end)
     {:error, :wrong_format}
   end
 
@@ -64,21 +64,21 @@ defmodule ResuelveAuth.Utils.Secret do
   end
 
   @doc """
-  Identifica si la tupla de la cadena firmada es válida de acuerdo al token enviado.
+  Identify if the tuple of the signed string is valid according to the sent token.
 
-  ## Ejemplo:
+  ## Example
 
   ```elixir
-
-  iex> alias ResuelveAuth.Utils.Secret
-  iex> data = {:error, "mensaje de error"}
-  iex> Secret.equivalent?(data, "data")
-  {:error, "mensaje de error"}
 
   iex> alias ResuelveAuth.Utils.Secret
   iex> data = %{valid: "datos"}
   iex> Secret.equivalent?(data, "datos")
   true
+
+  iex> alias ResuelveAuth.Utils.Secret
+  iex> data = {:error, "error message"}
+  iex> Secret.equivalent?(data, "data")
+  {:error, "error message"}
 
   ```
 
@@ -90,6 +90,6 @@ defmodule ResuelveAuth.Utils.Secret do
   @spec equivalent?(%{}, String.t()) :: boolean()
   def equivalent?(%{valid: valid}, sign), do: String.equivalent?(valid, sign)
 
-  # Regresa los valores de la tupla concatenados por un punto
+  # Returns the tuple values ​​concatenated by a dot
   defp join(%{data: data, sign: sign}), do: "#{data}.#{sign}"
 end

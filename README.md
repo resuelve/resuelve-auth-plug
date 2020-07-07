@@ -18,7 +18,7 @@ Plug to validate signed request.
 
 ```elixir
 def deps do
-  [{:resuelve_auth, "~> 1.5"}]
+  [{:resuelve_auth, "~> 1.4"}]
 end
 ```
 

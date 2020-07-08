@@ -23,14 +23,13 @@ get:
 debug:
 	iex -S mix
 
-doc: compile
-	mix docs;
-	tar -zcf docs.tar.gz doc/;
+credo:
+	mix credo --strict;
 
 .NOTPARALLEL: test
 .PHONY: test
 test: MIX_ENV=test
-test:
+test: compile credo
 	mix test --trace;
 	mix coveralls;
 
@@ -38,8 +37,17 @@ test:
 .PHONY: compile
 compile: clean get
 	mix compile;
+
+docs: compile
 	mix docs;
 	tar -zcf docs.tar.gz doc/;
+
+review: docs
+	mix hex.build --unpack --output release/;
+
+publish: docs
+	mix hex.build;
+	mix hex.publish;
 
 clean:
 	mix clean

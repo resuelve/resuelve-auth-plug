@@ -59,7 +59,7 @@ defmodule ResuelveAuth.Mixfile do
       {:plug, "~> 1.8"},
       {:excoveralls, "~> 0.12", only: :test},
       {:ex_doc, "~> 0.20.2", runtime: false, override: true},
-      {:ex_doc_makeup, "~> 0.1.2", override: true},
+      {:ex_doc_makeup, "~> 0.1.0", override: true},
       {:credo, "~> 1.4", only: [:dev, :test], runtime: false},
       {:poison, "~> 3.1"}
     ]

@@ -18,6 +18,7 @@ branches:
 
 script:
 - make compile
+- make credo
 - MIX_ENV=test mix coveralls.travis
 
 notifications:

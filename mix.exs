@@ -1,7 +1,7 @@
 defmodule ResuelveAuth.Mixfile do
   use Mix.Project
 
-  @version "1.4.0"
+  @version "1.4.1"
 
   def project do
     [
@@ -58,8 +58,10 @@ defmodule ResuelveAuth.Mixfile do
       {:cowboy, "~> 2.6"},
       {:plug, "~> 1.8"},
       {:excoveralls, "~> 0.12", only: :test},
-      {:ex_doc, "~> 0.20.1", runtime: false},
-      {:ex_doc_makeup, "~> 0.1.0"},
+      {:ex_doc, ">= 0.18.1", runtime: false, override: true},
+      {:ex_doc_makeup, "~> 0.4.0", override: true},
+      {:earmark, "~> 1.3.0", override: true},
+      {:credo, "~> 1.4", only: [:dev, :test], runtime: false},
       {:poison, "~> 3.1"}
     ]
   end

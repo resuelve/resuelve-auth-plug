@@ -1,5 +1,8 @@
 [![Build Status](https://travis-ci.org/resuelve/resuelve-auth-plug.svg?branch=master)](https://travis-ci.org/resuelve/resuelve-auth-plug)
 [![Coverage Status](https://coveralls.io/repos/github/resuelve/resuelve-auth-plug/badge.svg?branch=master)](https://coveralls.io/github/resuelve/resuelve-auth-plug?branch=master)
+[![Issues][issues-shield]][issues-url]
+[![Contributors][contributors-shield]][contributors-url]
+
 
 # ResuelveAuth
 
@@ -8,6 +11,7 @@ Plug to validate signed request.
 ## CONTENT
 
 * [Usage](#usage)
+* [Requeriments](#requeriments)
 * [Secret generation](#secret-generation)
 * [Crear token y validarlo](#create-token)
 * [Errors](#errors)
@@ -34,6 +38,19 @@ pipeline :api_auth do
   ]
   plug ResuelveAuth.AuthPlug, options
 end
+```
+
+## Requeriments
+
+Cause the cowboy (v2.6.0) library require OTP 21.0 you must need to use:
+
+* elixir         1.9.2
+* erlang         21.0 
+
+I recommend using [asdf](https://github.com/asdf-vm/asdf) as CLI tool that can manage multiple language runtime versions. So, you can use the rigth versions with:
+
+```terminal
+$ asdf install
 ```
 
 ## Secret generation
@@ -192,3 +209,9 @@ iex> token = TokenHelper.verify_token(token, options)
 
 This is the list of [contributors](https://github.com/resuelve/resuelve-auth-plug/graphs/contributors) who have participated in this project.
 
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[issues-shield]: https://img.shields.io/github/issues/resuelve/resuelve-auth-plug.svg?style=flat-square
+[issues-url]: https://github.com/resuelve/resuelve-auth-plug/issues
+[contributors-shield]: https://img.shields.io/github/contributors/resuelve/resuelve-auth-plug.svg?style=flat-square
+[contributors-url]: https://github.com/resuelve/resuelve-auth-plug/graphs/contributors

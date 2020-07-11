@@ -16,7 +16,7 @@ defmodule ResuelveAuth.Mixfile do
 
   def application do
     [
-      extra_applications: [:logger, :cowboy, :plug]
+      extra_applications: [:logger, :plug]
     ]
   end
 
@@ -35,9 +35,8 @@ defmodule ResuelveAuth.Mixfile do
 
   defp deps do
     [
-      {:cowboy, "~> 1.0"},
       {:plug, "~> 1.0"},
-      {:poison, "~> 3.1"}
+      {:poison, "~> 4.0.1"}
     ]
   end
 end

@@ -35,8 +35,8 @@ defmodule ResuelveAuth.Mixfile do
 
   defp deps do
     [
-      {:plug, "~> 1.0"},
-      {:poison, "~> 4.0.1"}
+      {:plug, "~> 1.8", override: true},
+      {:poison, ">= 3.1.0"}
     ]
   end
 end

@@ -42,9 +42,9 @@ end
 
 ## Requeriments
 
-Cause the cowboy (v2.6.0) library require OTP 21.0 you must need to use:
+Cause the library require OTP 21.0 you must need to use:
 
-* elixir         1.9.2
+* elixir         1.7.2
 * erlang         21.0 
 
 I recommend using [asdf](https://github.com/asdf-vm/asdf) as CLI tool that can manage multiple language runtime versions. So, you can use the rigth versions with:

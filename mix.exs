@@ -1,13 +1,13 @@
 defmodule ResuelveAuth.Mixfile do
   use Mix.Project
 
-  @version "1.4.2"
+  @version "1.4.3"
 
   def project do
     [
       app: :resuelve_auth,
       version: @version,
-      elixir: ">= 1.9.2",
+      elixir: ">= 1.7.2",
       start_permanent: Mix.env() == :prod,
       description: description(),
       package: package(),
@@ -30,14 +30,13 @@ defmodule ResuelveAuth.Mixfile do
       source_ref: "v#{@version}",
       main: "ResuelveAuth.AuthPlug",
       logo: "assets/logo.png",
-      markdown_processor: ExDocMakeup,
       extras: ["README.md"]
     ]
   end
 
   def application do
     [
-      extra_applications: [:logger, :cowboy, :plug]
+      extra_applications: [:logger, :plug]
     ]
   end
 
@@ -55,14 +54,12 @@ defmodule ResuelveAuth.Mixfile do
 
   defp deps do
     [
-      {:cowboy, "~> 2.6.0"},
       {:plug, "~> 1.8"},
       {:excoveralls, "~> 0.12", only: :test},
-      {:ex_doc, ">= 0.18.1", runtime: false, override: true},
-      {:ex_doc_makeup, "~> 0.4.0", override: true},
+      {:ex_doc, ">= 0.19.0", runtime: false, override: true},
       {:earmark, "~> 1.3.0", override: true},
       {:credo, "~> 1.4", only: [:dev, :test], runtime: false},
-      {:poison, ">= 3.1.0"}
+      {:poison, "~> 3.1"}
     ]
   end
 end

@@ -28,9 +28,9 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
      iex> options = [secret: "secret", limit_time: 4]
      iex> alias ResuelveAuth.Helpers.TokenHelper
      iex> token = TokenHelper.create_token(data, options)
-     "eyJ0aW1lc3RhbXAiOjE1NzI2NTYxNTUxMzUsInNlc3Npb24iOm51bGwsInNlcnZpY2UiOiJteS1hcGkiLCJyb2xlIjoic2VydmljZSIsIm1ldGEiOm51bGx9.1E1FA5A03B62DB5E0E5C5627D578E4ABBD1E83EFBFF72907428D0C95DC491394"
+     "eyJ0aW1lc3RhbXAiOjE1NzI2NTYxNTUxMzUsInNlc3Npb24iOm51bGwsInNlcnZpY2UiOiJteS1hcGkiLCJyb2xlIjoic2VydmljZSIsIm1ldGEiOm51bGwsImV4cGlyYXRpb24iOjg2NDAwMDAwfQ==.0BFEF9F51F0C65B7E190EF311D5B01D086014542CD13B04BEF1173EAAC0F07B8"
      iex> String.length(token)
-     185
+     217
 
   ```
 

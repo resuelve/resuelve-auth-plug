@@ -9,8 +9,7 @@ defmodule ResuelveAuth.Helpers.TokenHelperTest do
   alias ResuelveAuth.TokenData
 
   @secret [secret: "secret", limit_time: 4]
-  @json "eyJ0aW1lc3RhbXAiOiJ0aW1lc3RhbXAiLCJzZXNzaW9uIjoic2Vzc2lvbiIsInNlcnZpY2UiOiJteV9zZXJ2aWNlIiwicm9sZSI6InJvbGUiLCJtZXRhIjoibWV0YWRhdGEifQ==."
-  @sign "B5DCF6F8352BEC7D59C521E29A10122EA79456C76394F104F05B6B8203DB4F4E"
+  @token "eyJ0aW1lc3RhbXAiOiJ0aW1lc3RhbXAiLCJzZXNzaW9uIjoic2Vzc2lvbiIsInNlcnZpY2UiOiJteV9zZXJ2aWNlIiwicm9sZSI6InJvbGUiLCJtZXRhIjoibWV0YWRhdGEiLCJleHBpcmF0aW9uIjo4NjQwMDAwMH0=.876C688998BACBC78FBAF6821AB579ACB8A8A8FCD906BC833CC438D19DD0B5EA"
 
   test "generate new token" do
     token_data = %TokenData{
@@ -21,7 +20,7 @@ defmodule ResuelveAuth.Helpers.TokenHelperTest do
       meta: "metadata"
     }
 
-    assert TokenHelper.create_token(token_data, @secret) == @json <> @sign
+    assert TokenHelper.create_token(token_data, @secret) == @token
   end
 
   test "validate token after build it" do
@@ -41,7 +40,7 @@ defmodule ResuelveAuth.Helpers.TokenHelperTest do
   end
 
   test "verify token when timestamp is string" do
-    result = TokenHelper.verify_token(@json <> @sign, @secret)
+    result = TokenHelper.verify_token(@token, @secret)
     assert {:error, :invalid_unix_time} == result
   end
 

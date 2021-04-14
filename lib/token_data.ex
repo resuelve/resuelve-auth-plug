@@ -5,7 +5,10 @@ defmodule ResuelveAuth.TokenData do
 
   alias ResuelveAuth.Utils.Secret
 
-  defstruct [:service, :role, :session, :timestamp, :meta]
+  # It's used by NuLogin to manage the token's TTL
+  @day_in_ms 86_400_000
+
+  defstruct [:service, :role, :session, :timestamp, :meta, {:expiration, @day_in_ms}]
 
   @doc """
   Convert token to valid data or return an error.

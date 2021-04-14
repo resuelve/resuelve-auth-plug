@@ -9,7 +9,8 @@ defmodule ResuelveAuth.Utils.SecretTest do
     role: "user",
     service: "my-api",
     session: nil,
-    timestamp: 1_594_039_006_911
+    timestamp: 1_594_039_006_911,
+    expiration: 86_400_000
   }
 
   describe "[encode] " do
@@ -17,7 +18,7 @@ defmodule ResuelveAuth.Utils.SecretTest do
       {:ok, result} = Secret.encode(@token)
 
       assert result ==
-               ~s({"timestamp":1594039006911,"session":null,"service":"my-api","role":"user","meta":"metadata"})
+        ~s({"timestamp":1594039006911,"session":null,"service":"my-api","role":"user","meta":"metadata","expiration":86400000})
     end
 
     test "test valid results with encode64" do
@@ -27,7 +28,7 @@ defmodule ResuelveAuth.Utils.SecretTest do
         |> Secret.encode64()
 
       assert result ==
-               "eyJ0aW1lc3RhbXAiOjE1OTQwMzkwMDY5MTEsInNlc3Npb24iOm51bGwsInNlcnZpY2UiOiJteS1hcGkiLCJyb2xlIjoidXNlciIsIm1ldGEiOiJtZXRhZGF0YSJ9"
+        "eyJ0aW1lc3RhbXAiOjE1OTQwMzkwMDY5MTEsInNlc3Npb24iOm51bGwsInNlcnZpY2UiOiJteS1hcGkiLCJyb2xlIjoidXNlciIsIm1ldGEiOiJtZXRhZGF0YSIsImV4cGlyYXRpb24iOjg2NDAwMDAwfQ=="
     end
 
     test "test invalid keys" do

@@ -10,7 +10,7 @@ defmodule ResuelveAuth.Utils.SecretTest do
     service: "my-api",
     session: nil,
     timestamp: 1_594_039_006_911,
-    expiration: 86400000
+    expiration: 86_400_000
   }
 
   describe "[encode] " do

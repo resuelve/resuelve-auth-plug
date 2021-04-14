@@ -20,7 +20,7 @@ defmodule ResuelveAuth.Helpers.TokenHelperTest do
       meta: "metadata"
     }
 
-    assert TokenHelper.create_token(token_data, @secret) == @token 
+    assert TokenHelper.create_token(token_data, @secret) == @token
   end
 
   test "validate token after build it" do

@@ -5,7 +5,9 @@ defmodule ResuelveAuth.TokenData do
 
   alias ResuelveAuth.Utils.Secret
 
-  defstruct [:service, :role, :session, :timestamp, :meta]
+  @day_in_ms 86400000
+
+  defstruct [:service, :role, :session, :timestamp, :meta, {:expiration, @day_in_ms}]
 
   @doc """
   Convert token to valid data or return an error.

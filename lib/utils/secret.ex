@@ -54,7 +54,13 @@ defmodule ResuelveAuth.Utils.Secret do
   def cypher({:ok, json}, secret), do: cypher(json, secret)
 
   def cypher(data, secret) do
-    sign = Base.encode16(:crypto.hmac(:sha256, secret, data))
+    sign =
+      if String.to_integer(System.otp_release) >= 23 do
+        Base.encode16(:crypto.mac(:hmac, :sha256, secret, data))
+      else
+        Base.encode16(:crypto.hmac(:sha256, secret, data))
+      end
+
     %{data: data, sign: sign}
   end
 

@@ -1,7 +1,7 @@
 defmodule ResuelveAuth.Mixfile do
   use Mix.Project
 
-  @version "1.5.0"
+  @version "1.5.2"
 
   def project do
     [

@@ -32,7 +32,7 @@ defmodule ResuelveAuth.Utils.Secret do
 
   def encode64(input), do: Base.url_encode64(input)
 
-  @spec decode64(%{}) :: tuple()
+  @spec decode64(binary()) :: {:ok, binary()} | :error
   def decode64(input), do: Base.url_decode64(input)
 
   @spec decode(tuple() | %{}) :: {:ok, any()} | {:error, any()}
@@ -43,7 +43,6 @@ defmodule ResuelveAuth.Utils.Secret do
     result
   end
 
-  @spec decode(%{}) :: {:ok, any()} | {:error, any()}
   def decode(input), do: Poison.decode(input)
 
   def cypher({:error, reason} = _params) do

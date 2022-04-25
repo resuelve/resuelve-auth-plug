@@ -23,7 +23,7 @@ defmodule ResuelveAuth.TokenData do
 
   def cast(_any, _secret), do: {:error, :wrong_format}
 
-  @spec split(false, String.t()) :: {:error, String.t()}
+  @spec split(false, String.t()) :: {:error, atom()}
   defp split(false, _reason), do: {:error, :wrong_format}
 
   @spec split(true, String.t()) :: {:ok, %{}}
@@ -32,11 +32,11 @@ defmodule ResuelveAuth.TokenData do
     {:ok, %{data: data, sign: sign}}
   end
 
-  @spec is_equivalent({:error, String.t()}, String.t()) :: {:error, String.t()}
+  @spec is_equivalent({:error, atom()}, any()) :: {:error, atom()}
   defp is_equivalent({:error, reason}, _secret), do: {:error, reason}
 
   @spec is_equivalent({:ok, %{}}, String.t()) ::
-          {:ok, %{}} | {:error, String.t()}
+          {:ok, %{}} | {:error, atom()}
   defp is_equivalent({:ok, %{data: data, sign: sign}}, secret) do
     data
     |> Secret.cypher(sign, secret)

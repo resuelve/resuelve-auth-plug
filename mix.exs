@@ -59,7 +59,8 @@ defmodule ResuelveAuth.Mixfile do
       {:ex_doc, ">= 0.19.0", runtime: false, override: true},
       {:earmark, "~> 1.3.0", override: true},
       {:credo, "~> 1.4", only: [:dev, :test], runtime: false},
-      {:poison, "~> 3.1", override: true}
+      {:poison, "~> 3.1", override: true},
+      {:dialyxir, "~> 1.0", only: [:dev], runtime: false}
     ]
   end
 end

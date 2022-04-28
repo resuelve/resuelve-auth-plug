@@ -13,7 +13,7 @@ defmodule ResuelveAuth.TokenData do
   @doc """
   Convert token to valid data or return an error.
   """
-  @spec cast(String.t(), String.t()) :: {:ok, %{}} | {:error, String.t()}
+  @spec cast(String.t(), String.t()) :: {:ok, %{}} | {:error, atom()}
   def cast(token, secret) when is_binary(token) do
     token
     |> String.contains?(".")

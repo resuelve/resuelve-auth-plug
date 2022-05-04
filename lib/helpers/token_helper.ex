@@ -35,9 +35,11 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
   ```
 
   """
-  @spec create_token(struct, String.t()) :: String.t()
+  @spec create_token(struct(), list()) :: String.t()
   def create_token(%TokenData{} = data, options) when is_list(options) do
-    Secret.sign(data, options)
+    data
+    |> Map.from_struct()
+    |> Secret.sign(options)
   end
 
   @doc """
@@ -68,7 +70,7 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
   ```
 
   """
-  @spec verify_token(String.t(), List.t()) :: tuple
+  @spec verify_token(String.t(), list()) :: tuple()
   def verify_token(token, options) do
     with {:ok, data} <- TokenData.cast(token, options[:secret]) do
       data
@@ -111,8 +113,8 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
   @doc """
   Define if token is expired.
   """
-  @spec is_expired({:error, any()} | {:ok, binary()}, integer()) ::
-          {:ok, binary()} | {:error, binary()}
+  @spec is_expired({:error, atom()} | {:ok, binary()}, integer()) ::
+          {:ok, map()} | {:error, atom()}
   def is_expired({:error, _reason} = error, _time), do: error
 
   def is_expired({:ok, %{"time" => time} = data}, limit_time) do

@@ -92,7 +92,7 @@ defmodule ResuelveAuth.Utils.Secret do
           {:error, String.t()}
   def equivalent?({:error, _reason} = params, _any), do: params
 
-  @spec equivalent?(%{}, String.t()) :: boolean()
+  @spec equivalent?(map(), String.t()) :: boolean()
   def equivalent?(%{valid: valid}, sign), do: String.equivalent?(valid, sign)
 
   # Returns the tuple values ​​concatenated by a dot

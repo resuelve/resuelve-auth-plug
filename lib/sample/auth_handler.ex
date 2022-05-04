@@ -15,7 +15,7 @@ defmodule ResuelveAuth.Sample.AuthHandler do
   @doc """
   Handles errors that the plug can respond to
   """
-  @spec errors(map, String.t()) :: any
+  @spec errors(%Plug.Conn{}, String.t()) :: %Plug.Conn{}
   def errors(conn, message) do
     Logger.error(fn -> "Invalid token: #{inspect(message)}" end)
     detail = reason(message)

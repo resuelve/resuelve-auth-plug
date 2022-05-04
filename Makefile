@@ -32,6 +32,7 @@ test: MIX_ENV=test
 test: compile credo
 	mix test --trace;
 	mix coveralls;
+	MIX_ENV=dev mix dialyzer;
 
 .NOTPARALLEL: compile
 .PHONY: compile

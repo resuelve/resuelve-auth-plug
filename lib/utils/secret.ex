@@ -8,7 +8,7 @@ defmodule ResuelveAuth.Utils.Secret do
   Sign the information with a seed (`secret`)
   by first going through a coding process.
   """
-  @spec sign(%{}, list()) :: String.t()
+  @spec sign(map(), list()) :: String.t()
   def sign(data, options) when is_list(options) do
     secret = options[:secret]
 

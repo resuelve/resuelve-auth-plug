@@ -37,9 +37,7 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
   """
   @spec create_token(struct(), list()) :: String.t()
   def create_token(%TokenData{} = data, options) when is_list(options) do
-    data
-    |> Map.from_struct()
-    |> Secret.sign(options)
+    Secret.sign(data, options)
   end
 
   @doc """

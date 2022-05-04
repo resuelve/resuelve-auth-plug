@@ -15,9 +15,8 @@ defmodule ResuelveAuth.TokenData do
   """
   @spec cast(String.t(), String.t()) :: {:error, atom()} | {:ok, String.t()}
   def cast(token, secret) do
-    with [data | [sign | _]] <- split(token) do
-      is_equivalent(data, sign, secret)
-    else
+    case split(token) do
+      [data | [sign | _]] -> is_equivalent(data, sign, secret)
       _ -> {:error, :wrong_format}
     end
   end

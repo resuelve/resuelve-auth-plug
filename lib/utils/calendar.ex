@@ -31,7 +31,7 @@ defmodule ResuelveAuth.Utils.Calendar do
   ```
 
   """
-  @spec from_unix(integer()) :: {:ok, %DateTime{}} | {:error, any()}
+  @spec from_unix(integer()) :: {:ok, DateTime.t()} | {:error, any()}
   def from_unix(timestamp) when is_integer(timestamp) do
     case DateTime.from_unix(timestamp, @time_units) do
       {:ok, time} ->

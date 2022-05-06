@@ -36,7 +36,10 @@ defmodule ResuelveAuth.Helpers.TokenHelperTest do
 
     token = TokenHelper.create_token(token_data, @secret)
     assert {:ok, data} = TokenHelper.verify_token(token, @secret)
-    assert data = token_data
+    assert data
+      |> Map.new(fn {k, v} -> {String.to_atom(k), v} end)
+      |> Map.take(Map.keys(token_data))
+      |> Map.equal?(Map.from_struct(token_data))
   end
 
   test "verify token when timestamp is string" do

@@ -118,31 +118,7 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
   def is_expired({:ok, %{"time" => time} = data}, limit_time) do
     DateTime.utc_now()
     |> Calendar.diff(time)
-    |> is_expired(limit_time)
-    |> case do
-      true -> {:error, :expired}
-      false -> {:ok, data}
-    end
+    |> Kernel.>(limit_time)
+    |> if(do: {:error, :expired}, else: {:ok, data})
   end
-
-  @doc """
-  Identify if the time is less than the time limit
-
-  ## Ejemplo:
-
-  ```elixir
-
-  iex> ResuelveAuth.Helpers.TokenHelper.is_expired(4, 5)
-  false
-
-  iex> ResuelveAuth.Helpers.TokenHelper.is_expired(4, 4)
-  false
-
-  iex> ResuelveAuth.Helpers.TokenHelper.is_expired(5, 4)
-  true
-
-  ```
-  """
-  @spec is_expired(integer(), integer()) :: boolean()
-  def is_expired(time, limit_time), do: time > limit_time
 end

@@ -31,7 +31,7 @@ defmodule ResuelveAuth.Utils.Calendar do
   ```
 
   """
-  @spec from_unix(integer()) :: {:ok, %DateTime{}} | {:error, any()}
+  @spec from_unix(integer()) :: {:ok, DateTime.t()} | {:error, any()}
   def from_unix(timestamp) when is_integer(timestamp) do
     case DateTime.from_unix(timestamp, @time_units) do
       {:ok, time} ->
@@ -70,7 +70,7 @@ defmodule ResuelveAuth.Utils.Calendar do
   ```
 
   """
-  @spec is_past?(integer()) :: boolean()
+  @spec is_past?(integer() | tuple()) :: boolean()
   def is_past?(unix_time) when is_integer(unix_time) do
     unix_time
     |> DateTime.from_unix(@time_units)
@@ -127,7 +127,7 @@ defmodule ResuelveAuth.Utils.Calendar do
 
   ```
   """
-  @spec diff(integer(), integer()) :: integer()
+  @spec diff(map(), map()) :: integer()
   def diff(first_time, second_time) do
     seconds = DateTime.diff(first_time, second_time)
     hours = seconds / (60 * 60)

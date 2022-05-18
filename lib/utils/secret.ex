@@ -8,7 +8,7 @@ defmodule ResuelveAuth.Utils.Secret do
   Sign the information with a seed (`secret`)
   by first going through a coding process.
   """
-  @spec sign(%{}, list()) :: String.t()
+  @spec sign(map(), list()) :: String.t()
   def sign(data, options) when is_list(options) do
     secret = options[:secret]
 
@@ -19,10 +19,10 @@ defmodule ResuelveAuth.Utils.Secret do
     |> join()
   end
 
-  @spec encode(%{}) :: tuple()
+  @spec encode(map()) :: {:ok, String.t()} | {:error, any()}
   def encode(input), do: Poison.encode(input, strict_keys: true)
 
-  @spec encode64(tuple() | %{}) :: {:ok, any()} | {:error, any()}
+  @spec encode64(tuple() | %{}) :: String.t() | {:error, any()}
   def encode64({:ok, json}), do: encode64(json)
 
   def encode64({:error, reason} = error) do
@@ -32,7 +32,7 @@ defmodule ResuelveAuth.Utils.Secret do
 
   def encode64(input), do: Base.url_encode64(input)
 
-  @spec decode64(%{}) :: tuple()
+  @spec decode64(binary()) :: {:ok, binary()} | :error
   def decode64(input), do: Base.url_decode64(input)
 
   @spec decode(tuple() | %{}) :: {:ok, any()} | {:error, any()}
@@ -43,10 +43,9 @@ defmodule ResuelveAuth.Utils.Secret do
     result
   end
 
-  @spec decode(%{}) :: {:ok, any()} | {:error, any()}
   def decode(input), do: Poison.decode(input)
 
-  def cypher({:error, reason} = _params) do
+  def cypher({:error, reason} = _params, _secret) do
     Logger.error(fn -> "#{inspect(reason)}" end)
     {:error, :wrong_format}
   end
@@ -93,7 +92,7 @@ defmodule ResuelveAuth.Utils.Secret do
           {:error, String.t()}
   def equivalent?({:error, _reason} = params, _any), do: params
 
-  @spec equivalent?(%{}, String.t()) :: boolean()
+  @spec equivalent?(map(), String.t()) :: boolean()
   def equivalent?(%{valid: valid}, sign), do: String.equivalent?(valid, sign)
 
   # Returns the tuple values ​​concatenated by a dot

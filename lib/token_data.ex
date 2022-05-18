@@ -13,31 +13,21 @@ defmodule ResuelveAuth.TokenData do
   @doc """
   Convert token to valid data or return an error.
   """
-  @spec cast(String.t(), String.t()) :: {:ok, %{}} | {:error, String.t()}
-  def cast(token, secret) when is_binary(token) do
-    token
-    |> String.contains?(".")
-    |> split(token)
-    |> is_equivalent(secret)
+  @spec cast(String.t(), String.t()) :: {:error, atom()} | {:ok, String.t()}
+  def cast(token, secret) do
+    case split(token) do
+      [data | [sign | _]] -> is_equivalent(data, sign, secret)
+      _ -> {:error, :wrong_format}
+    end
   end
 
-  def cast(_any, _secret), do: {:error, :wrong_format}
+  @spec split(String.t()) :: list()
+  defp split(token) when is_binary(token), do: String.split(token, ".")
+  defp split(_token), do: []
 
-  @spec split(false, String.t()) :: {:error, String.t()}
-  defp split(false, _reason), do: {:error, :wrong_format}
-
-  @spec split(true, String.t()) :: {:ok, %{}}
-  defp split(true, token) do
-    [data, sign] = String.split(token, ".")
-    {:ok, %{data: data, sign: sign}}
-  end
-
-  @spec is_equivalent({:error, String.t()}, String.t()) :: {:error, String.t()}
-  defp is_equivalent({:error, reason}, _secret), do: {:error, reason}
-
-  @spec is_equivalent({:ok, %{}}, String.t()) ::
-          {:ok, %{}} | {:error, String.t()}
-  defp is_equivalent({:ok, %{data: data, sign: sign}}, secret) do
+  @spec is_equivalent(String.t(), String.t(), String.t()) ::
+          {:error, atom()} | {:ok, String.t()}
+  defp is_equivalent(data, sign, secret) do
     data
     |> Secret.cypher(sign, secret)
     |> Secret.equivalent?(sign)

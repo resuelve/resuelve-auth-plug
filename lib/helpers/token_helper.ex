@@ -35,7 +35,7 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
   ```
 
   """
-  @spec create_token(struct, String.t()) :: String.t()
+  @spec create_token(struct(), list()) :: String.t()
   def create_token(%TokenData{} = data, options) when is_list(options) do
     Secret.sign(data, options)
   end
@@ -68,7 +68,7 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
   ```
 
   """
-  @spec verify_token(String.t(), List.t()) :: tuple
+  @spec verify_token(String.t(), list()) :: tuple()
   def verify_token(token, options) do
     with {:ok, data} <- TokenData.cast(token, options[:secret]) do
       data
@@ -111,38 +111,12 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
   @doc """
   Define if token is expired.
   """
-  @spec is_expired({:error, any()} | {:ok, binary()}, integer()) ::
-          {:ok, binary()} | {:error, binary()}
+  @spec is_expired({:error, atom()} | {:ok, binary()}, integer()) ::
+          {:ok, map()} | {:error, atom()}
   def is_expired({:error, _reason} = error, _time), do: error
 
   def is_expired({:ok, %{"time" => time} = data}, limit_time) do
-    DateTime.utc_now()
-    |> Calendar.diff(time)
-    |> is_expired(limit_time)
-    |> case do
-      true -> {:error, :expired}
-      false -> {:ok, data}
-    end
+    if(Calendar.diff(DateTime.utc_now(), time) > limit_time,
+       do: {:error, :expired}, else: {:ok, data})
   end
-
-  @doc """
-  Identify if the time is less than the time limit
-
-  ## Ejemplo:
-
-  ```elixir
-
-  iex> ResuelveAuth.Helpers.TokenHelper.is_expired(4, 5)
-  false
-
-  iex> ResuelveAuth.Helpers.TokenHelper.is_expired(4, 4)
-  false
-
-  iex> ResuelveAuth.Helpers.TokenHelper.is_expired(5, 4)
-  true
-
-  ```
-  """
-  @spec is_expired(integer(), integer()) :: boolean()
-  def is_expired(time, limit_time), do: time > limit_time
 end

@@ -116,9 +116,7 @@ defmodule ResuelveAuth.Helpers.TokenHelper do
   def is_expired({:error, _reason} = error, _time), do: error
 
   def is_expired({:ok, %{"time" => time} = data}, limit_time) do
-    DateTime.utc_now()
-    |> Calendar.diff(time)
-    |> Kernel.>(limit_time)
-    |> if(do: {:error, :expired}, else: {:ok, data})
+    if(Calendar.diff(DateTime.utc_now(), time) > limit_time,
+       do: {:error, :expired}, else: {:ok, data})
   end
 end

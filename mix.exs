@@ -46,6 +46,8 @@ defmodule ResuelveAuth.Mixfile do
 
   def package do
     [
+      name: "resuelve_auth",
+      organization: "resuelve",
       files: ~w(lib mix.exs README*),
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/resuelve/resuelve-auth-plug"}

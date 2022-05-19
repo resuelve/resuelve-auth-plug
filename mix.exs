@@ -46,6 +46,8 @@ defmodule ResuelveAuth.Mixfile do
 
   def package do
     [
+      name: "resuelve_auth",
+      organization: "resuelve",
       files: ~w(lib mix.exs README*),
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/resuelve/resuelve-auth-plug"}
@@ -56,10 +58,10 @@ defmodule ResuelveAuth.Mixfile do
     [
       {:plug, "~> 1.8"},
       {:excoveralls, "~> 0.12", only: :test, override: true},
-      {:ex_doc, ">= 0.19.0", runtime: false, override: true},
-      {:earmark, "~> 1.3.0", override: true},
+      {:ex_doc, ">= 0.19.0", runtime: false},
+      {:earmark, "~> 1.3.0"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
-      {:poison, "~> 3.1", override: true},
+      {:poison, "~> 3.1"},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false}
     ]
   end

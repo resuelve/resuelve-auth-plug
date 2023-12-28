@@ -18,6 +18,10 @@ jobs:
           - elixir_version: elixir:1.11-alpine
           # otp 24
           - elixir_version: elixir:1.12-alpine
+          # otp 24
+          - elixir_version: elixir:1.13-alpine
+          # otp 26
+          - elixir_version: elixir:1.14-alpine
     runs-on: ubuntu-latest
     container: ${{ matrix.elixir_version }}
     steps:

@@ -8,11 +8,9 @@ on:
 jobs:
   publish-hexpm:
     name: Publish to Hex.pm
-    runs-on: self-hosted-rtd
-
+    runs-on: ubuntu-24.04
     container:
-      image: hexpm/elixir:1.17.3-erlang-26.2.5.6-debian-bookworm-20240904-slim
-      options: --user root
+      image: elixir:1.9.4-alpine
 
     steps:
       - name: Checkout repository

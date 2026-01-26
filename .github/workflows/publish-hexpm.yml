@@ -1,0 +1,40 @@
+name: Publish to hex.pm
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  publish-hexpm:
+    name: Publish to Hex.pm
+    runs-on: self-hosted-rtd
+
+    container:
+      image: hexpm/elixir:1.17.3-erlang-26.2.5.6-debian-bookworm-20240904-slim
+      options: --user root
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Hex and Rebar
+        run: |
+          mix local.hex --force
+          mix local.rebar --force
+
+      - name: Authenticate Hex organization (read-only)
+        run: |
+          mix hex.organization auth resuelve --key ${{ secrets.HEX_KEY_READ_ONLY }}
+
+      - name: Install dependencies
+        run: mix deps.get
+
+      - name: Compile library
+        run: mix compile
+
+      - name: Publish to Hex.pm
+        env:
+          HEX_API_KEY: ${{ secrets.HEX_KEY_PUBLISH }}
+        run: |
+          mix hex.publish --organization resuelve --yes

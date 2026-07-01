@@ -18,7 +18,7 @@ defmodule ResuelveAuth.Utils.SecretTest do
       {:ok, result} = Secret.encode(@token)
 
       assert result ==
-        ~s({"timestamp":1594039006911,"session":null,"service":"my-api","role":"user","meta":"metadata","expiration":86400000})
+        ~s({"expiration":86400000,"session":null,"role":"user","service":"my-api","timestamp":1594039006911,"meta":"metadata"})
     end
 
     test "test valid results with encode64" do
@@ -28,13 +28,13 @@ defmodule ResuelveAuth.Utils.SecretTest do
         |> Secret.encode64()
 
       assert result ==
-        "eyJ0aW1lc3RhbXAiOjE1OTQwMzkwMDY5MTEsInNlc3Npb24iOm51bGwsInNlcnZpY2UiOiJteS1hcGkiLCJyb2xlIjoidXNlciIsIm1ldGEiOiJtZXRhZGF0YSIsImV4cGlyYXRpb24iOjg2NDAwMDAwfQ=="
+        "eyJleHBpcmF0aW9uIjo4NjQwMDAwMCwic2Vzc2lvbiI6bnVsbCwicm9sZSI6InVzZXIiLCJzZXJ2aWNlIjoibXktYXBpIiwidGltZXN0YW1wIjoxNTk0MDM5MDA2OTExLCJtZXRhIjoibWV0YWRhdGEifQ=="
     end
 
     test "test invalid keys" do
       data = %{:foo => "foo1", "foo" => "foo2"}
       result = Secret.encode(data)
-      assert {:error, {:invalid, "foo"}} = result
+      assert {:error, %Poison.EncodeError{message: "duplicate key found: :foo"}} = result
     end
 
     test "test invalid keys with encode64" do
@@ -43,7 +43,7 @@ defmodule ResuelveAuth.Utils.SecretTest do
         |> Secret.encode()
         |> Secret.encode64()
 
-      assert {:error, {:invalid, "foo"}} = result
+      assert {:error, %Poison.EncodeError{message: "duplicate key found: :foo"}} = result
     end
   end
 end

@@ -9,7 +9,7 @@ defmodule ResuelveAuth.Helpers.TokenHelperTest do
   alias ResuelveAuth.TokenData
 
   @secret [secret: "secret", limit_time: 4]
-  @token "eyJ0aW1lc3RhbXAiOiJ0aW1lc3RhbXAiLCJzZXNzaW9uIjoic2Vzc2lvbiIsInNlcnZpY2UiOiJteV9zZXJ2aWNlIiwicm9sZSI6InJvbGUiLCJtZXRhIjoibWV0YWRhdGEiLCJleHBpcmF0aW9uIjo4NjQwMDAwMH0=.876C688998BACBC78FBAF6821AB579ACB8A8A8FCD906BC833CC438D19DD0B5EA"
+  @token "eyJleHBpcmF0aW9uIjo4NjQwMDAwMCwic2Vzc2lvbiI6InNlc3Npb24iLCJyb2xlIjoicm9sZSIsInNlcnZpY2UiOiJteV9zZXJ2aWNlIiwidGltZXN0YW1wIjoidGltZXN0YW1wIiwibWV0YSI6Im1ldGFkYXRhIn0=.231C4E2CBF47C28E3A90E32EC8CB9B43C173A3CD572C5D17FD5015F0C2F7E47B"
 
   test "generate new token" do
     token_data = %TokenData{

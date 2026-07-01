@@ -60,7 +60,7 @@ defmodule ResuelveAuth.Mixfile do
       {:excoveralls, "~> 0.12", only: :test, override: true},
       {:ex_doc, ">= 0.19.0", only: :dev, runtime: false},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
-      {:poison, "~> 3.1"},
+      {:poison, "~> 4.0"},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false}
     ]
   end
